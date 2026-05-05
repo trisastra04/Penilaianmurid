@@ -1,0 +1,312 @@
+import React, { useState, useEffect } from 'react';
+import { User, BookOpen, ChevronRight, RotateCcw, BrainCircuit, Ear, Hand, Eye, Users, Activity, Target, Feather, Shield, Coffee, Zap } from 'lucide-react';
+
+// --- DATA KUESIONER ---
+const vakQuestions = [
+  { id: 'v1', question: "Kalau kamu sedang belajar hal yang baru, cara apa yang paling membantumu mengerti?", options: [{ id: 'A', text: "Melihat gambar, diagram, atau membaca buku petunjuk." }, { id: 'B', text: "Mendengarkan penjelasan dari guru atau teman." }, { id: 'C', text: "Langsung mencoba dan mempraktikkannya sendiri." }] },
+  { id: 'v2', question: "Saat kamu mencoba menghafal cara mengeja sebuah kata yang sulit, apa yang kamu lakukan?", options: [{ id: 'A', text: "Membayangkan bentuk tulisan kata tersebut di kepalamu." }, { id: 'B', text: "Mengeja kata tersebut keras-keras atau bergumam." }, { id: 'C', text: "Menulis kata tersebut berkali-kali di kertas." }] },
+  { id: 'v3', question: "Kalau kamu dibelikan mainan baru yang harus dirakit, apa yang pertama kali kamu lakukan?", options: [{ id: 'A', text: "Membaca buku panduan dan melihat gambarnya." }, { id: 'B', text: "Meminta orang lain menjelaskan cara merakitnya." }, { id: 'C', text: "Membuang buku panduan dan langsung mengutak-atik mainan itu." }] },
+  { id: 'v4', question: "Saat sedang ujian, bagaimana caramu mengingat pelajaran yang sudah dihafal?", options: [{ id: 'A', text: "Kamu ingat letak tulisan atau gambar di buku catatanmu." }, { id: 'B', text: "Kamu ingat suara gurumu saat menjelaskan di kelas." }, { id: 'C', text: "Kamu ingat praktik, eksperimen, atau gerakan yang dilakukan saat belajar." }] },
+  { id: 'v5', question: "Saat punya waktu luang atau libur, kegiatan apa yang paling kamu sukai?", options: [{ id: 'A', text: "Menonton film, membaca buku bergambar, atau main game visual." }, { id: 'B', text: "Mendengarkan musik, podcast, atau asyik ngobrol dengan teman." }, { id: 'C', text: "Bermain olahraga, bersepeda, atau jalan-jalan keluar rumah." }] },
+  { id: 'v6', question: "Ketika guru sedang menjelaskan pelajaran yang panjang di depan kelas, apa yang sering kamu lakukan?", options: [{ id: 'A', text: "Menatap guru atau mencatat/menggambar di buku (doodling)." }, { id: 'B', text: "Mendengarkan dengan serius (meski kadang tidak melihat ke arah guru)." }, { id: 'C', text: "Sulit duduk diam, sering mengubah posisi duduk, atau memainkan pulpen." }] },
+  { id: 'v7', question: "Bagaimana caramu yang paling gampang untuk mengingat arah atau jalan ke tempat baru?", options: [{ id: 'A', text: "Mengingat patokan bangunan, warna gedung, atau melihat peta." }, { id: 'B', text: "Bertanya kepada orang sekitar dan mengingat instruksi jalan." }, { id: 'C', text: "Mengandalkan insting saja atau membiarkan kaki melangkah mengikuti jalan." }] },
+  { id: 'v8', question: "Kalau kamu disuruh menceritakan sebuah film ke temanmu, bagaimana caramu bercerita?", options: [{ id: 'A', text: "Kamu akan menceritakan pemandangan dan pakaian tokohnya dengan sangat detail." }, { id: 'B', text: "Kamu akan meniru suara, nada bicara, atau kata-kata dari tokoh film tersebut." }, { id: 'C', text: "Kamu bercerita sambil berdiri dan menirukan gerakan/aksi tokohnya." }] },
+  { id: 'v9', question: "Di sekolah, pelajaran apa yang paling kamu sukai?", options: [{ id: 'A', text: "Seni Rupa (menggambar/melukis) atau Komputer." }, { id: 'B', text: "Seni Musik atau Bahasa (bercerita/diskusi)." }, { id: 'C', text: "Olahraga (Penjaskes) atau Keterampilan/Prakarya." }] },
+  { id: 'v10', question: "Saat bertemu teman baru, apa yang paling mudah kamu ingat darinya?", options: [{ id: 'A', text: "Kamu ingat wajahnya, tapi lupa namanya." }, { id: 'B', text: "Kamu ingat namanya, tapi lupa wajahnya." }, { id: 'C', text: "Kamu ingat apa yang kalian lakukan bersama (misalnya: bermain bola bareng)." }] },
+  { id: 'v11', question: "Apa yang paling mengganggumu saat sedang fokus belajar?", options: [{ id: 'A', text: "Meja yang berantakan atau cahaya yang terlalu redup." }, { id: 'B', text: "Suara berisik seperti orang ngobrol atau suara TV." }, { id: 'C', text: "Disuruh duduk diam dalam waktu yang terlalu lama." }] },
+  { id: 'v12', question: "Kalau kamu disuruh membaca buku cerita, buku seperti apa yang kamu pilih?", options: [{ id: 'A', text: "Buku yang punya banyak gambar atau komik." }, { id: 'B', text: "Buku yang ceritanya banyak dialog/percakapan." }, { id: 'C', text: "Buku pop-up (yang gambarnya timbul) atau buku teka-teki yang bisa diisi." }] },
+  { id: 'v13', question: "Saat kamu merasa marah atau sedih, apa yang biasanya kamu lakukan?", options: [{ id: 'A', text: "Diam saja, cemberut, atau menangis." }, { id: 'B', text: "Mengomel, berteriak, atau bercerita ke teman." }, { id: 'C', text: "Membanting pintu, berjalan cepat, atau memukul bantal." }] },
+  { id: 'v14', question: "Kalau kamu harus mengingat nomor telepon atau angka, bagaimana caramu mengingatnya?", options: [{ id: 'A', text: "Membayangkan deretan angka tersebut di pikiran." }, { id: 'B', text: "Mengucapkan angka tersebut berulang-ulang seperti nada lagu." }, { id: 'C', text: "Mengetikkan angka tersebut di udara atau berpura-pura memencet tombol HP." }] },
+  { id: 'v15', question: "Kalau kamu berhasil melakukan sesuatu yang hebat, pujian seperti apa yang paling kamu suka?", options: [{ id: 'A', text: "Diberi senyuman, stiker, atau jempol." }, { id: 'B', text: "Dipuji dengan kata-kata 'Wah, kamu hebat sekali!'." }, { id: 'C', text: "Ditepuk pundaknya, dielus rambutnya, atau melakukan 'Tos' (High five)." }] }
+];
+
+const temperamentQuestions = [
+  { id: 't1', question: "Saat bekerja dalam tugas kelompok, saya biasanya...", options: [{ id: 'A', text: "Menghidupkan suasana dan sering bercanda." }, { id: 'B', text: "Mengambil alih pimpinan dan membagi-bagi tugas." }, { id: 'C', text: "Fokus mengerjakan bagian saya dengan detail dan sempurna." }, { id: 'D', text: "Mengikuti saja apa kata ketua kelompok demi kedamaian." }] },
+  { id: 't2', question: "Jika saya sedang marah atau kesal, saya cenderung...", options: [{ id: 'A', text: "Cepat meledak marah, tapi cepat juga memaafkan dan melupakannya." }, { id: 'B', text: "Menyerang balik secara blak-blakan dan berargumen keras." }, { id: 'C', text: "Menyimpan perasaan, mudah tersinggung, dan mengingatnya cukup lama." }, { id: 'D', text: "Diam, memendamnya sendiri, dan berusaha menghindari konflik/ribut." }] },
+  { id: 't3', question: "Kekurangan utama saya yang sering dikritik orang lain adalah...", options: [{ id: 'A', text: "Terlalu banyak bicara, berantakan, dan kurang fokus." }, { id: 'B', text: "Terlalu bossy (suka memerintah), keras kepala, dan tidak sabaran." }, { id: 'C', text: "Terlalu perfeksionis, mudah pesimis/overthinking." }, { id: 'D', text: "Terlalu lambat, pasif, dan susah mengambil keputusan." }] },
+  { id: 't4', question: "Sebagai seorang teman, saya dikenal sebagai orang yang...", options: [{ id: 'A', text: "Menyenangkan, populer, dan suka bercerita panjang lebar." }, { id: 'B', text: "Setia kawan, pelindung, dan bisa memberikan solusi masalah." }, { id: 'C', text: "Pendengar yang sangat baik, dalam, dan berempati tinggi." }, { id: 'D', text: "Tenang, santai, humoris, dan paling mudah diajak ke mana saja." }] },
+  { id: 't5', question: "Ketika diberi tugas/PR baru yang cukup sulit, reaksi pertama saya...", options: [{ id: 'A', text: "Antusias di awal, tapi mungkin bosan di tengah jalan jika tidak menarik." }, { id: 'B', text: "Merasa tertantang dan langsung membuat strategi untuk menaklukkannya." }, { id: 'C', text: "Menganalisis semua detail dan kesulitan, lalu membuat jadwal teratur." }, { id: 'D', text: "Merasa ragu, menunda-nunda, dan berharap ada teman yang membantu." }] }
+];
+
+const typeABQuestions = [
+  { id: 'ab1', question: "Saat terjebak macet parah atau antrean panjang, bagaimana perasaanmu?", options: [{ id: 'A', text: "Sangat gelisah, stres, terus melihat jam, dan ingin marah." }, { id: 'B', text: "Santai saja, menggunakan waktu untuk dengar musik, main HP, atau istirahat." }] },
+  { id: 'ab2', question: "Dalam bermain game atau olahraga bersama teman, apakah kemenangan itu penting bagimu?", options: [{ id: 'A', text: "Ya, saya sangat kompetitif dan benci kekalahan." }, { id: 'B', text: "Tidak terlalu, yang penting saya menikmati permainannya dan bersenang-senang." }] },
+  { id: 'ab3', question: "Bagaimana kebiasaanmu berbicara atau berjalan sehari-hari?", options: [{ id: 'A', text: "Berjalan cepat, bicara cepat, dan sering menyela kalimat orang lain." }, { id: 'B', text: "Berjalan lebih santai, berbicara tenang, dan mendengarkan sampai selesai." }] },
+  { id: 'ab4', question: "Saat sedang libur panjang sekolah, apa yang biasanya kamu rasakan?", options: [{ id: 'A', text: "Kadang merasa bersalah atau gelisah jika tidak melakukan kegiatan yang produktif." }, { id: 'B', text: "Sangat menikmati waktu bermalas-malasan tanpa memikirkan beban tugas." }] },
+  { id: 'ab5', question: "Apakah kamu sering melakukan dua pekerjaan sekaligus (multitasking)?", options: [{ id: 'A', text: "Ya, sangat sering agar semua pekerjaan cepat selesai secara efisien." }, { id: 'B', text: "Jarang, saya lebih suka fokus mengerjakan satu hal pada satu waktu sampai selesai." }] }
+];
+
+// --- DATA GUIDES & INTERPRETATIONS ---
+const guideData = {
+  // VAK
+  'VAK_A': { title: 'Visual', icon: <Eye className="w-8 h-8 text-blue-500" />, color: 'bg-blue-100 text-blue-800 border-blue-300', characteristics: "Belajar melalui penglihatan. Mengingat lebih baik dengan gambar/warna.", tips: "Gunakan media visual (Mind map, PPT, flashcard). Minta siswa menggunakan stabilo." },
+  'VAK_B': { title: 'Auditori', icon: <Ear className="w-8 h-8 text-purple-500" />, color: 'bg-purple-100 text-purple-800 border-purple-300', characteristics: "Belajar melalui pendengaran. Suka diskusi dan peka nada suara.", tips: "Gunakan metode ceramah interaktif, diskusi. Izinkan membaca bergumam." },
+  'VAK_C': { title: 'Kinestetik', icon: <Hand className="w-8 h-8 text-orange-500" />, color: 'bg-orange-100 text-orange-800 border-orange-300', characteristics: "Belajar melalui gerakan/sentuhan. Sulit duduk diam lama.", tips: "Perbanyak praktik, eksperimen. Sisipkan ice breaking gerakan." },
+  
+  // Temperament
+  'TEMP_A': { title: 'Sanguinis', icon: <Users className="w-8 h-8 text-yellow-500" />, color: 'bg-yellow-100 text-yellow-800 border-yellow-300', characteristics: "Ekstrovert, ceria, banyak bicara, spontan, namun kurang terorganisir.", tips: "Berikan pujian, libatkan dalam presentasi, bantu mereka membuat jadwal yang disiplin." },
+  'TEMP_B': { title: 'Koleris', icon: <Target className="w-8 h-8 text-red-500" />, color: 'bg-red-100 text-red-800 border-red-300', characteristics: "Ekstrovert, tegas, berjiwa pemimpin, target-oriented, bisa bossy.", tips: "Beri tantangan/tanggung jawab (seperti ketua kelas), namun ajarkan empati pada teman." },
+  'TEMP_C': { title: 'Melankolis', icon: <Feather className="w-8 h-8 text-indigo-500" />, color: 'bg-indigo-100 text-indigo-800 border-indigo-300', characteristics: "Introvert, pemikir, detail, perfeksionis, sensitif, mudah cemas.", tips: "Beri apresiasi atas detail kerjanya, hindari kritik tajam di depan umum, dorong untuk tidak overthinking." },
+  'TEMP_D': { title: 'Plegmatis', icon: <Shield className="w-8 h-8 text-emerald-500" />, color: 'bg-emerald-100 text-emerald-800 border-emerald-300', characteristics: "Introvert, tenang, cinta damai, pendengar baik, cenderung pasif/menunda.", tips: "Beri motivasi lembut, libatkan dalam kerja kelompok yang suportif, ajarkan untuk lebih asertif/berani tampil." },
+  
+  // Type A/B
+  'AB_A': { title: 'Kepribadian Tipe A', icon: <Zap className="w-8 h-8 text-rose-500" />, color: 'bg-rose-100 text-rose-800 border-rose-300', characteristics: "Ambisious, kompetitif, terburu-buru, rentan stres.", tips: "Ajarkan manajemen stres, relaksasi, dan bahwa kegagalan/kekalahan adalah hal wajar dalam belajar." },
+  'AB_B': { title: 'Kepribadian Tipe B', icon: <Coffee className="w-8 h-8 text-teal-500" />, color: 'bg-teal-100 text-teal-800 border-teal-300', characteristics: "Santai, sabar, easy-going, kurang kompetitif.", tips: "Berikan deadline yang lebih ketat namun fleksibel agar mereka tidak terlalu bersantai/menunda pekerjaan." }
+};
+
+export default function App() {
+  const [student, setStudent] = useState({ name: '', className: '' });
+  const [answers, setAnswers] = useState({});
+  const [showResult, setShowResult] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // HASIL
+  const [resultVAK, setResultVAK] = useState([]);
+  const [resultTemp, setResultTemp] = useState([]);
+  const [resultAB, setResultAB] = useState([]);
+
+  // URL Google Script Anda
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvl4hcEPiitdME3w0MaKtlC5aB9uaNsYAxnOGjLmYwTIgynT78CyRbnchYobJN5m7o/exec'; 
+
+  useEffect(() => {
+    if (showResult) window.scrollTo(0, 0);
+  }, [showResult]);
+
+  const handleAnswer = (questionId, optionId) => {
+    setAnswers(prev => ({ ...prev, [questionId]: optionId }));
+  };
+
+  const calculateResults = async () => {
+    // 1. Hitung Skor VAK
+    const scoresVAK = { A: 0, B: 0, C: 0 };
+    vakQuestions.forEach(q => { if (answers[q.id]) scoresVAK[answers[q.id]]++; });
+    const maxVAK = Math.max(scoresVAK.A, scoresVAK.B, scoresVAK.C);
+    const domVAK = [];
+    if (scoresVAK.A === maxVAK) domVAK.push('VAK_A');
+    if (scoresVAK.B === maxVAK) domVAK.push('VAK_B');
+    if (scoresVAK.C === maxVAK) domVAK.push('VAK_C');
+
+    // 2. Hitung Skor Temperament
+    const scoresTemp = { A: 0, B: 0, C: 0, D: 0 };
+    temperamentQuestions.forEach(q => { if (answers[q.id]) scoresTemp[answers[q.id]]++; });
+    const maxTemp = Math.max(scoresTemp.A, scoresTemp.B, scoresTemp.C, scoresTemp.D);
+    const domTemp = [];
+    if (scoresTemp.A === maxTemp) domTemp.push('TEMP_A');
+    if (scoresTemp.B === maxTemp) domTemp.push('TEMP_B');
+    if (scoresTemp.C === maxTemp) domTemp.push('TEMP_C');
+    if (scoresTemp.D === maxTemp) domTemp.push('TEMP_D');
+
+    // 3. Hitung Skor Tipe A/B
+    const scoresAB = { A: 0, B: 0 };
+    typeABQuestions.forEach(q => { if (answers[q.id]) scoresAB[answers[q.id]]++; });
+    const maxAB = Math.max(scoresAB.A, scoresAB.B);
+    const domAB = [];
+    if (scoresAB.A === maxAB) domAB.push('AB_A');
+    if (scoresAB.B === maxAB) domAB.push('AB_B');
+
+    setResultVAK(domVAK);
+    setResultTemp(domTemp);
+    setResultAB(domAB);
+
+    // Kirim Data ke Google Spreadsheet
+    if (GOOGLE_SCRIPT_URL) {
+      setIsSubmitting(true);
+      
+      const compileData = (domArray) => ({
+        titles: domArray.map(id => guideData[id].title).join(' / '),
+        chars: domArray.map(id => guideData[id].characteristics).join(' | '),
+        tips: domArray.map(id => guideData[id].tips).join(' | ')
+      });
+
+      const vakData = compileData(domVAK);
+      const tempData = compileData(domTemp);
+      const abData = compileData(domAB);
+
+      // Membuat Rangkuman Kesimpulan Akhir
+      const kesimpulanAkhir = `Berdasarkan hasil asesmen, ${student.name} paling optimal belajar dengan gaya ${vakData.titles}. Dalam interaksi sosial dan tugas kelompok, kepribadian utamanya cenderung ${tempData.titles}. Terkait kebiasaan kerja dan manajemen stres, ia menunjukkan kecenderungan ${abData.titles}.`;
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nama: student.name,
+            kelas: student.className,
+            
+            // VAK
+            vak_visual: scoresVAK.A, vak_auditori: scoresVAK.B, vak_kinestetik: scoresVAK.C,
+            vak_dominan: vakData.titles, vak_karakteristik: vakData.chars, vak_tips: vakData.tips,
+            
+            // Temperament
+            temp_sanguinis: scoresTemp.A, temp_koleris: scoresTemp.B, temp_melankolis: scoresTemp.C, temp_plegmatis: scoresTemp.D,
+            temp_dominan: tempData.titles, temp_karakteristik: tempData.chars, temp_tips: tempData.tips,
+
+            // Type A/B
+            ab_tipea: scoresAB.A, ab_tipeb: scoresAB.B,
+            ab_dominan: abData.titles, ab_karakteristik: abData.chars, ab_tips: abData.tips,
+
+            // Kesimpulan Akhir
+            kesimpulan_akhir: kesimpulanAkhir
+          })
+        });
+      } catch (error) {
+        console.error("Gagal mengirim data:", error);
+      }
+      setIsSubmitting(false);
+    }
+
+    setShowResult(true);
+  };
+
+  const resetTest = () => {
+    setAnswers({});
+    setShowResult(false);
+    setStudent({ name: '', className: '' });
+    window.scrollTo(0, 0);
+  };
+
+  const totalQuestions = vakQuestions.length + temperamentQuestions.length + typeABQuestions.length;
+  const answeredCount = Object.keys(answers).length;
+  const isComplete = answeredCount === totalQuestions && student.name.trim() !== '' && student.className.trim() !== '';
+
+  const allQuestions = [...vakQuestions, ...temperamentQuestions, ...typeABQuestions];
+
+  const renderResultCard = (title, domArray) => (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6">
+      <h2 className="text-lg font-semibold text-slate-500 mb-4 text-center">{title}</h2>
+      <div className="space-y-4">
+        {domArray.map(styleId => {
+          const style = guideData[styleId];
+          return (
+            <div key={styleId} className={`rounded-2xl border p-6 ${style.color} bg-opacity-30 flex items-center justify-center space-x-4`}>
+              <div className="bg-white p-3 rounded-xl shadow-sm">
+                {style.icon}
+              </div>
+              <div className="text-center sm:text-left">
+                <h3 className="text-2xl font-bold">{style.title}</h3>
+                {domArray.length > 1 && <span className="text-xs font-medium opacity-75">(Kombinasi)</span>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  if (showResult) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center">
+            <BrainCircuit className="w-16 h-16 text-indigo-600 mx-auto mb-4" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Profil Karakter & Belajar</h1>
+            <div className="inline-flex items-center justify-center flex-wrap gap-2 text-slate-600 bg-slate-100 px-4 py-2 rounded-full mt-2 text-sm sm:text-base">
+              <span className="flex items-center"><User className="w-4 h-4 mr-2"/> {student.name}</span>
+              <span className="hidden sm:inline text-slate-300">|</span>
+              <span className="flex items-center"><BookOpen className="w-4 h-4 mr-2"/> Kelas {student.className}</span>
+            </div>
+            <p className="mt-6 text-sm text-amber-600 bg-amber-50 p-3 rounded-lg border border-amber-100">
+              *Detail analisis dan tips telah otomatis dikirimkan kepada Guru Bimbingan Konseling / Wali Kelasmu.
+            </p>
+          </div>
+
+          {renderResultCard("GAYA BELAJAR UTAMA", resultVAK)}
+          {renderResultCard("TIPE KEPRIBADIAN KLASIK", resultTemp)}
+          {renderResultCard("GAYA RESPON STRES (Tipe A/B)", resultAB)}
+
+          <div className="text-center pt-8 pb-12">
+            <button onClick={resetTest} className="inline-flex items-center px-6 py-3 bg-slate-800 text-white font-medium rounded-xl hover:bg-slate-700 transition-colors w-full sm:w-auto justify-center">
+              <RotateCcw className="w-5 h-5 mr-2" /> Selesai / Siswa Berikutnya
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-4">
+            Asesmen Profil Pelajar
+          </h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-slate-100">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+              <input type="text" value={student.name} onChange={(e) => setStudent({...student, name: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="Masukkan namamu..." />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
+              <input type="text" value={student.className} onChange={(e) => setStudent({...student, className: e.target.value})} className="w-full px-4 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="Contoh: 7A, 8B..." />
+            </div>
+          </div>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="sticky top-4 z-10 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200 p-4 mb-8 flex justify-between items-center">
+          <span className="text-sm font-medium text-slate-600 hidden sm:inline">Progres:</span>
+          <div className="flex-1 sm:mx-4 mr-4">
+            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div className="h-full bg-indigo-500 transition-all duration-300 ease-out" style={{ width: `${(answeredCount / totalQuestions) * 100}%` }}></div>
+            </div>
+          </div>
+          <span className="text-sm font-bold text-indigo-600">{answeredCount} / {totalQuestions}</span>
+        </div>
+
+        {/* Questions List */}
+        <div className="space-y-6">
+          {allQuestions.map((q, index) => (
+            <div key={q.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 transition-all hover:shadow-md">
+              <h3 className="text-lg font-medium text-slate-800 mb-4">
+                {q.question}
+              </h3>
+              <div className="space-y-3">
+                {q.options.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => handleAnswer(q.id, opt.id)}
+                    className={`w-full flex items-center p-4 rounded-xl border-2 text-left transition-all ${
+                      answers[q.id] === opt.id
+                        ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
+                        : 'border-slate-100 bg-slate-50 text-slate-700 hover:border-indigo-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center ${answers[q.id] === opt.id ? 'border-indigo-500' : 'border-slate-300'}`}>
+                      {answers[q.id] === opt.id && <div className="w-3 h-3 rounded-full bg-indigo-500" />}
+                    </div>
+                    <span className="flex-1">{opt.text}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Submit */}
+        <div className="mt-8 mb-20 text-center bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          {!isComplete && (
+            <p className="text-amber-600 mb-4 text-sm font-medium">
+              {student.name === '' || student.className === '' ? "Mohon isi Nama dan Kelas." : `Masih ada ${totalQuestions - answeredCount} pertanyaan yang belum dijawab.`}
+            </p>
+          )}
+          <button
+            onClick={calculateResults}
+            disabled={!isComplete || isSubmitting}
+            className={`inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto ${
+              isComplete && !isSubmitting ? 'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+            }`}
+          >
+            {isSubmitting ? 'Menyimpan & Menganalisis Data...' : 'Lihat Hasil Asesmen'}
+            {!isSubmitting && <ChevronRight className="w-5 h-5 ml-2" />}
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+}
