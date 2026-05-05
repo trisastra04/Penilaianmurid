@@ -15,15 +15,58 @@
     body {
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
     }
+    
+    /* Scrollbar minimalis untuk tabel & modal */
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9; 
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1; 
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8; 
+    }
   </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col">
+<body class="bg-slate-50 min-h-screen flex flex-col relative">
+
+  <!-- Tombol Login Guru di Pojok Kanan Atas -->
+  <button onclick="showTeacherLogin()" class="absolute top-4 right-4 z-50 inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur border border-slate-200 shadow-sm rounded-full text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+    <i data-lucide="shield-check" class="w-4 h-4 mr-2"></i> Login Guru
+  </button>
+
+  <!-- Modal Login Guru -->
+  <div id="teacher-login-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 w-full max-w-sm relative">
+      <button onclick="hideTeacherLogin()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="flex justify-center mb-4 text-indigo-600">
+        <i data-lucide="lock-keyhole" class="w-12 h-12"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-800 text-center mb-2">Akses Guru</h2>
+      <p class="text-slate-500 text-sm text-center mb-6">Masukkan ID/PIN untuk melihat dashboard rekapitulasi.</p>
+      
+      <input type="password" id="teacher-pin" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 text-center text-xl tracking-widest outline-none transition-all mb-4" placeholder="••••••" />
+      <p id="teacher-error" class="text-red-500 text-sm text-center mb-4 hidden">PIN salah. Silakan coba lagi.</p>
+      
+      <button onclick="processTeacherLogin()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors">
+        Masuk Dashboard
+      </button>
+    </div>
+  </div>
 
   <!-- APLIKASI UTAMA -->
   <div id="app" class="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full flex-grow flex flex-col justify-center">
     
-    <!-- ==================== HALAMAN LOGIN ==================== -->
-    <div id="login-screen" class="w-full max-w-md mx-auto">
+    <!-- ==================== HALAMAN LOGIN MURID ==================== -->
+    <div id="login-screen" class="w-full max-w-md mx-auto mt-8">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center">
         <div class="flex justify-center mb-6 text-indigo-600">
           <i data-lucide="graduation-cap" class="w-20 h-20"></i>
@@ -54,8 +97,7 @@
     </div>
 
     <!-- ==================== HALAMAN KUESIONER ==================== -->
-    <div id="question-screen" class="hidden">
-      <!-- Header Info Singkat -->
+    <div id="question-screen" class="hidden mt-8">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h1 class="text-xl sm:text-2xl font-bold text-slate-800 text-center sm:text-left">
           Asesmen Profil Pelajar
@@ -67,7 +109,6 @@
         </div>
       </div>
 
-      <!-- Progress Bar -->
       <div class="sticky top-4 z-10 bg-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-slate-200 p-4 mb-8 flex justify-between items-center">
         <span class="text-sm font-medium text-slate-600 hidden sm:inline">Progres:</span>
         <div class="flex-1 sm:mx-4 mr-4">
@@ -78,12 +119,8 @@
         <span id="progress-text" class="text-sm font-bold text-indigo-600">0 / 25</span>
       </div>
 
-      <!-- List Pertanyaan -->
-      <div id="questions-container" class="space-y-6">
-        <!-- Pertanyaan akan dirender menggunakan JavaScript di sini -->
-      </div>
+      <div id="questions-container" class="space-y-6"></div>
 
-      <!-- Submit Section -->
       <div class="mt-8 mb-20 text-center bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
         <p id="submit-msg" class="text-amber-600 mb-4 text-sm font-medium">Masih ada pertanyaan yang belum dijawab.</p>
         <button id="submit-btn" disabled class="inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto bg-slate-100 text-slate-400 cursor-not-allowed">
@@ -93,8 +130,8 @@
       </div>
     </div>
 
-    <!-- ==================== HALAMAN HASIL ==================== -->
-    <div id="result-screen" class="hidden space-y-6 max-w-2xl mx-auto w-full">
+    <!-- ==================== HALAMAN HASIL MURID ==================== -->
+    <div id="result-screen" class="hidden space-y-6 max-w-2xl mx-auto w-full mt-8">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center">
         <div class="flex justify-center mb-4 text-indigo-600">
           <i data-lucide="brain-circuit" class="w-16 h-16"></i>
@@ -107,9 +144,7 @@
         </div>
       </div>
 
-      <div id="result-cards-container" class="space-y-6">
-        <!-- Kartu Hasil dirender di sini -->
-      </div>
+      <div id="result-cards-container" class="space-y-6"></div>
 
       <div class="text-center pt-8 pb-12">
         <button onclick="resetTest()" class="inline-flex items-center justify-center px-6 py-3 bg-slate-800 text-white font-medium rounded-xl hover:bg-slate-700 transition-colors w-full sm:w-auto">
@@ -117,10 +152,180 @@
         </button>
       </div>
     </div>
+  </div>
 
+  <!-- ==================== HALAMAN DASHBOARD GURU ==================== -->
+  <div id="dashboard-screen" class="hidden min-h-screen bg-slate-100 w-full absolute inset-0 z-40 overflow-y-auto pb-20">
+    <!-- Navbar Guru -->
+    <div class="bg-indigo-700 text-white shadow-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center">
+          <i data-lucide="layout-dashboard" class="w-6 h-6 mr-3"></i>
+          <h1 class="font-bold text-xl tracking-wide">Rekap Asesmen Murid</h1>
+        </div>
+        <button onclick="exitDashboard()" class="px-4 py-2 bg-indigo-800 hover:bg-indigo-900 rounded-lg text-sm font-medium transition-colors flex items-center">
+          <i data-lucide="log-out" class="w-4 h-4 mr-2"></i> Keluar
+        </button>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      
+      <!-- Filter & Status -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="w-full sm:w-1/3">
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Filter Berdasarkan Kelas</label>
+          <select id="dash-class-filter" onchange="renderDashboard()" class="w-full px-4 py-2 border border-slate-300 rounded-lg bg-slate-50 focus:ring-2 focus:ring-indigo-500 outline-none">
+            <option value="ALL">Semua Kelas</option>
+            <!-- Opsi kelas akan dimuat di sini -->
+          </select>
+        </div>
+        <div class="text-right w-full sm:w-auto">
+          <p class="text-sm text-slate-500">Total Murid Mengisi</p>
+          <p class="text-3xl font-bold text-indigo-600" id="dash-total-students">0</p>
+        </div>
+      </div>
+
+      <!-- Loading State Dashboard -->
+      <div id="dash-loading" class="text-center py-20 hidden">
+        <!-- Akan diisi oleh JS -->
+      </div>
+
+      <!-- Container Chart & Table -->
+      <div id="dash-content" class="hidden space-y-8">
+        
+        <!-- Kesimpulan Kelas -->
+        <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 shadow-sm relative overflow-hidden">
+          <div class="absolute top-0 right-0 p-4 opacity-10">
+            <i data-lucide="sparkles" class="w-24 h-24 text-indigo-600"></i>
+          </div>
+          <h3 class="font-bold text-indigo-900 mb-2 flex items-center"><i data-lucide="bar-chart-2" class="w-5 h-5 mr-2"></i> Kesimpulan Keseluruhan Kelas</h3>
+          <p id="dash-class-summary-text" class="text-indigo-800 leading-relaxed relative z-10"></p>
+        </div>
+
+        <!-- Baris Persentase -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i data-lucide="eye" class="w-5 h-5 mr-2 text-blue-500"></i> Gaya Belajar (VAK)</h3>
+            <div class="space-y-4" id="dash-vak-bars"></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i data-lucide="users" class="w-5 h-5 mr-2 text-yellow-500"></i> Tipe Kepribadian</h3>
+            <div class="space-y-4" id="dash-temp-bars"></div>
+          </div>
+          <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i data-lucide="activity" class="w-5 h-5 mr-2 text-rose-500"></i> Respon Stres (A/B)</h3>
+            <div class="space-y-4" id="dash-ab-bars"></div>
+          </div>
+        </div>
+
+        <!-- Tabel Detail Individu -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-6 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+            <h3 class="font-bold text-slate-800 flex items-center"><i data-lucide="list" class="w-5 h-5 mr-2 text-slate-500"></i> Data Individu Murid</h3>
+          </div>
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse whitespace-nowrap">
+              <thead>
+                <tr class="bg-slate-100 text-slate-600 text-sm uppercase tracking-wider">
+                  <th class="p-4 font-semibold border-b">No</th>
+                  <th class="p-4 font-semibold border-b">Nama Lengkap</th>
+                  <th class="p-4 font-semibold border-b">Kelas</th>
+                  <th class="p-4 font-semibold border-b">Gaya Belajar</th>
+                  <th class="p-4 font-semibold border-b">Kepribadian</th>
+                  <th class="p-4 font-semibold border-b">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="dash-table-body" class="text-sm text-slate-700 divide-y divide-slate-100">
+                <!-- Baris tabel dirender di sini -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DETAIL INDIVIDU (UNTUK GURU) ==================== -->
+  <div id="student-detail-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative">
+      
+      <!-- Header Modal -->
+      <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white z-10 shrink-0">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800" id="modal-name">Nama Murid</h2>
+          <p class="text-sm text-slate-500 mt-1"><i data-lucide="book-open" class="w-4 h-4 inline mr-1"></i> Kelas: <span id="modal-class" class="font-semibold text-slate-700"></span></p>
+        </div>
+        <button onclick="hideStudentDetail()" class="text-slate-400 hover:text-red-500 transition-colors bg-slate-50 p-2 rounded-full">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      
+      <!-- Konten Modal (Scrollable) -->
+      <div class="p-6 overflow-y-auto custom-scrollbar space-y-6 flex-grow bg-slate-50" id="modal-content">
+        
+        <!-- Kesimpulan Penuh -->
+        <div class="bg-indigo-600 text-white p-5 rounded-xl shadow-sm">
+          <h3 class="font-bold flex items-center mb-2"><i data-lucide="star" class="w-5 h-5 mr-2 text-yellow-300"></i> Kesimpulan Akhir (Dari Spreadsheet)</h3>
+          <p id="modal-conclusion" class="text-sm leading-relaxed text-indigo-50 whitespace-pre-wrap"></p>
+        </div>
+
+        <!-- Detail VAK -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-800 border-b pb-2 mb-3 flex items-center"><i data-lucide="eye" class="w-4 h-4 mr-2 text-blue-500"></i> Analisis Gaya Belajar</h3>
+          <p class="text-sm font-semibold text-indigo-600 mb-2">Dominan: <span id="modal-vak-dom"></span></p>
+          <div class="text-sm text-slate-600 space-y-2">
+            <p><strong>Karakteristik:</strong> <span id="modal-vak-char"></span></p>
+            <p><strong>Tips Mengajar:</strong> <span id="modal-vak-tips"></span></p>
+            <div class="mt-3 bg-slate-50 p-3 rounded text-xs flex justify-around border border-slate-100">
+               <div>Visual: <span id="modal-vak-score-v" class="font-bold"></span></div>
+               <div>Auditori: <span id="modal-vak-score-a" class="font-bold"></span></div>
+               <div>Kinestetik: <span id="modal-vak-score-k" class="font-bold"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Kepribadian -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-800 border-b pb-2 mb-3 flex items-center"><i data-lucide="users" class="w-4 h-4 mr-2 text-yellow-500"></i> Analisis Kepribadian Klasik</h3>
+          <p class="text-sm font-semibold text-indigo-600 mb-2">Dominan: <span id="modal-temp-dom"></span></p>
+          <div class="text-sm text-slate-600 space-y-2">
+            <p><strong>Karakteristik:</strong> <span id="modal-temp-char"></span></p>
+            <p><strong>Tips & Pendekatan:</strong> <span id="modal-temp-tips"></span></p>
+            <div class="mt-3 bg-slate-50 p-3 rounded text-xs flex justify-around border border-slate-100">
+               <div>San: <span id="modal-temp-score-s" class="font-bold"></span></div>
+               <div>Kol: <span id="modal-temp-score-c" class="font-bold"></span></div>
+               <div>Mel: <span id="modal-temp-score-m" class="font-bold"></span></div>
+               <div>Ple: <span id="modal-temp-score-p" class="font-bold"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail Respon Stres -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 class="font-bold text-slate-800 border-b pb-2 mb-3 flex items-center"><i data-lucide="activity" class="w-4 h-4 mr-2 text-rose-500"></i> Respon Stres (Tipe A/B)</h3>
+          <p class="text-sm font-semibold text-indigo-600 mb-2">Kecenderungan: <span id="modal-ab-dom"></span></p>
+          <div class="text-sm text-slate-600 space-y-2">
+            <p><strong>Karakteristik:</strong> <span id="modal-ab-char"></span></p>
+            <p><strong>Tips Penanganan:</strong> <span id="modal-ab-tips"></span></p>
+            <div class="mt-3 bg-slate-50 p-3 rounded text-xs flex justify-around border border-slate-100">
+               <div>Skor Tipe A: <span id="modal-ab-score-a" class="font-bold"></span></div>
+               <div>Skor Tipe B: <span id="modal-ab-score-b" class="font-bold"></span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <script>
+    // --- KONFIGURASI ---
+    const TEACHER_PIN = "2021951162"; 
+
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz4j6RBVQT01pwvveaX4uhsiEv_N-wqb1M_M6eDuJc8CKNa7gPAHACRTeM_hO5tBZTK/exec'; 
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3yfqmevoPCGaR100sZE9w_EDWuFyNIMVarzKzABw-RAyUYm8I6nJTlWpvtPYk-07afaotGnM7sKwY/pub?gid=894866630&single=true&output=csv';
+
     // --- DATA KUESIONER ---
     const vakQuestions = [
       { id: 'v1', question: "Saat guru memberikan materi yang rumit (seperti Fisika, Matematika, atau Sejarah), cara apa yang paling membantumu paham?", options: [{ id: 'A', text: "Membaca rangkuman berpoin, melihat mind-map, atau menonton video animasi visual." }, { id: 'B', text: "Mendengarkan penjelasan guru secara langsung atau berdiskusi dengan teman." }, { id: 'C', text: "Mengerjakan latihan soal sendiri atau melakukan praktikum secara langsung." }] },
@@ -225,39 +430,28 @@
     let answers = {};
     let studentName = '';
     let studentClass = '';
-    let studentsData = {}; // Menyimpan data dari CSV
-
-    // GOOGLE SCRIPT & CSV URL
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzI0CVW4sce1UmJKLdTNHyPcXUYxdlMbo6LMZVngfcNWo-3LYJIPe-habxJN8FsnP9h/exec'; 
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3yfqmevoPCGaR100sZE9w_EDWuFyNIMVarzKzABw-RAyUYm8I6nJTlWpvtPYk-07afaotGnM7sKwY/pub?gid=894866630&single=true&output=csv';
+    let studentsData = {}; 
+    let spreadsheetDataCache = []; // Cache data lengkap dari Sheet
+    let currentFilteredData = [];  // Data yang sedang difilter
 
     // DOM Elements
     const loginScreen = document.getElementById('login-screen');
     const questionScreen = document.getElementById('question-screen');
     const resultScreen = document.getElementById('result-screen');
-    
     const inputName = document.getElementById('student-name');
     const inputClass = document.getElementById('student-class');
     const startBtn = document.getElementById('start-btn');
-    
-    const displayName = document.getElementById('display-name');
-    const displayClass = document.getElementById('display-class');
-    
     const qContainer = document.getElementById('questions-container');
     const submitBtn = document.getElementById('submit-btn');
-    const submitMsg = document.getElementById('submit-msg');
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
 
-    // Fungsi Parser CSV sederhana
+    // --- FUNGSI PARSER CSV ---
     function parseCSV(str) {
-      const arr = [];
-      let quote = false;
-      let row = 0, col = 0;
+      const arr = []; let quote = false; let row = 0, col = 0;
       for (let c = 0; c < str.length; c++) {
         let cc = str[c], nc = str[c+1];
-        arr[row] = arr[row] || [];
-        arr[row][col] = arr[row][col] || '';
+        arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
         if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
         if (cc == '"') { quote = !quote; continue; }
         if (cc == ',' && !quote) { ++col; continue; }
@@ -269,7 +463,7 @@
       return arr;
     }
 
-    // Fetch data siswa dari CSV
+    // --- FETCH DATA CSV (UNTUK LOGIN MURID) ---
     async function loadStudentData() {
       try {
         const response = await fetch(CSV_URL);
@@ -288,10 +482,8 @@
             });
           }
 
-          // Urutkan nama abjad
           Object.keys(studentsData).forEach(k => studentsData[k].sort());
 
-          // Populate Kelas Dropdown
           inputClass.innerHTML = '<option value="">-- Pilih Kelas --</option>';
           headers.forEach(h => {
             const opt = document.createElement('option');
@@ -307,12 +499,9 @@
       }
     }
 
-    // Initialize UI
+    // --- INISIALISASI ---
     function init() {
-      // Muat data dari CSV
       loadStudentData();
-
-      // Render questions
       qContainer.innerHTML = '';
       allQuestions.forEach(q => {
         const qDiv = document.createElement('div');
@@ -340,20 +529,15 @@
         qContainer.appendChild(qDiv);
       });
 
-      // Login Screen Listeners
       inputClass.addEventListener('change', function() {
         studentClass = this.value;
         studentName = '';
-        
-        // Reset dropdown nama
         inputName.innerHTML = '<option value="">-- Pilih Nama --</option>';
-        
         if (studentClass && studentsData[studentClass]) {
           inputName.disabled = false;
           studentsData[studentClass].forEach(name => {
             const opt = document.createElement('option');
-            opt.value = name;
-            opt.textContent = name;
+            opt.value = name; opt.textContent = name;
             inputName.appendChild(opt);
           });
         } else {
@@ -369,19 +553,14 @@
       });
       
       startBtn.addEventListener('click', startAssessment);
-
-      // Submit listener
       submitBtn.addEventListener('click', calculateResults);
 
-      // Initialize icons
       lucide.createIcons();
     }
 
-    // Validasi input di halaman Login
     function checkLoginInput() {
       studentName = inputName.value;
       studentClass = inputClass.value;
-      
       if (studentName.trim() !== '' && studentClass.trim() !== '') {
         startBtn.disabled = false;
         startBtn.className = "mt-8 w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-lg font-bold transition-all bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5";
@@ -391,30 +570,22 @@
       }
     }
 
-    // Mulai Asesmen
     function startAssessment() {
       loginScreen.classList.add('hidden');
       questionScreen.classList.remove('hidden');
-      
-      // Update display nama dan kelas di header soal
-      displayName.innerText = studentName;
-      displayClass.innerText = studentClass;
-      
+      document.getElementById('display-name').innerText = studentName;
+      document.getElementById('display-class').innerText = studentClass;
       window.scrollTo(0, 0);
     }
 
-    // Handle answer selection
     function handleAnswer(questionId, optionId) {
       answers[questionId] = optionId;
-      
       const qBlock = document.getElementById(`q-${questionId}`);
       const buttons = qBlock.querySelectorAll('button');
-      
       buttons.forEach(btn => {
         const isSelected = btn.dataset.opt === optionId;
         const checkCircle = btn.querySelector('.check-circle');
         const innerDot = btn.querySelector('.inner-dot');
-        
         if (isSelected) {
           btn.className = "w-full flex items-center p-4 rounded-xl border-2 text-left transition-all border-indigo-500 bg-indigo-50 text-indigo-900";
           checkCircle.className = "check-circle flex-shrink-0 w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center border-indigo-500";
@@ -425,38 +596,31 @@
           innerDot.classList.add('hidden');
         }
       });
-
       updateProgress();
     }
 
-    // Update progress bar and submit button
     function updateProgress() {
       const answeredCount = Object.keys(answers).length;
       progressBar.style.width = `${(answeredCount / totalQuestions) * 100}%`;
       progressText.innerText = `${answeredCount} / ${totalQuestions}`;
-
       const isComplete = answeredCount === totalQuestions;
-
       if (isComplete) {
         submitBtn.disabled = false;
         submitBtn.className = "inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5";
-        submitMsg.classList.add('hidden');
+        document.getElementById('submit-msg').classList.add('hidden');
       } else {
         submitBtn.disabled = true;
         submitBtn.className = "inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto bg-slate-100 text-slate-400 cursor-not-allowed";
-        submitMsg.classList.remove('hidden');
-        submitMsg.innerText = `Masih ada ${totalQuestions - answeredCount} pertanyaan yang belum dijawab.`;
+        document.getElementById('submit-msg').classList.remove('hidden');
+        document.getElementById('submit-msg').innerText = `Masih ada ${totalQuestions - answeredCount} pertanyaan yang belum dijawab.`;
       }
     }
 
-    // Calculate Results and Submit
     async function calculateResults() {
-      // Show loading state
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'Menyimpan & Menganalisis Data...';
       submitBtn.className = "inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto bg-indigo-400 text-white cursor-wait";
 
-      // 1. Hitung Skor VAK
       const scoresVAK = { A: 0, B: 0, C: 0 };
       vakQuestions.forEach(q => { if (answers[q.id]) scoresVAK[answers[q.id]]++; });
       const maxVAK = Math.max(scoresVAK.A, scoresVAK.B, scoresVAK.C);
@@ -465,7 +629,6 @@
       if (scoresVAK.B === maxVAK) domVAK.push('VAK_B');
       if (scoresVAK.C === maxVAK) domVAK.push('VAK_C');
 
-      // 2. Hitung Skor Temperament
       const scoresTemp = { A: 0, B: 0, C: 0, D: 0 };
       temperamentQuestions.forEach(q => { if (answers[q.id]) scoresTemp[answers[q.id]]++; });
       const maxTemp = Math.max(scoresTemp.A, scoresTemp.B, scoresTemp.C, scoresTemp.D);
@@ -475,7 +638,6 @@
       if (scoresTemp.C === maxTemp) domTemp.push('TEMP_C');
       if (scoresTemp.D === maxTemp) domTemp.push('TEMP_D');
 
-      // 3. Hitung Skor Tipe A/B
       const scoresAB = { A: 0, B: 0 };
       typeABQuestions.forEach(q => { if (answers[q.id]) scoresAB[answers[q.id]]++; });
       const maxAB = Math.max(scoresAB.A, scoresAB.B);
@@ -483,7 +645,6 @@
       if (scoresAB.A === maxAB) domAB.push('AB_A');
       if (scoresAB.B === maxAB) domAB.push('AB_B');
 
-      // Helper function compileData
       const compileData = (domArray) => ({
         titles: domArray.map(id => guideData[id].title).join(' / '),
         chars: domArray.map(id => guideData[id].characteristics).join(' | '),
@@ -497,16 +658,12 @@
 
       const kesimpulanAkhir = `PROFIL: ${studentName} memiliki gaya belajar dominan ${vakData.titles} (${vakData.chars}). Secara kepribadian, ia cenderung ${tempData.titles} (${tempData.chars}). Terkait respon stres, ia menunjukkan ${abData.titles} (${abData.chars}).\n\nTIPS MENGAJAR: ${vakData.tips} ${tempData.tips} ${abData.tips}\n\nTIPS MENASEHATI: ${tempData.advising} ${abData.advising} ${vakData.advising}`;
 
-      // Kirim Data ke Google Spreadsheet
       if (GOOGLE_SCRIPT_URL) {
         try {
           await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              nama: studentName,
-              kelas: studentClass,
+              nama: studentName, kelas: studentClass,
               vak_visual: scoresVAK.A, vak_auditori: scoresVAK.B, vak_kinestetik: scoresVAK.C,
               vak_dominan: vakData.titles, vak_karakteristik: vakData.chars, vak_tips: vakData.tips,
               temp_sanguinis: scoresTemp.A, temp_koleris: scoresTemp.B, temp_melankolis: scoresTemp.C, temp_plegmatis: scoresTemp.D,
@@ -524,7 +681,6 @@
       showResultsUI(domVAK, domTemp, domAB);
     }
 
-    // Render results in UI
     function showResultsUI(domVAK, domTemp, domAB) {
       questionScreen.classList.add('hidden');
       resultScreen.classList.remove('hidden');
@@ -569,32 +725,261 @@
       `);
     }
 
-    // Reset Test
     function resetTest() {
       answers = {};
-      studentName = '';
-      studentClass = '';
-      inputClass.value = '';
-      
+      studentName = ''; studentClass = ''; inputClass.value = '';
       inputName.innerHTML = '<option value="">Pilih Kelas terlebih dahulu</option>';
-      inputName.disabled = true;
-      inputName.value = '';
-      
-      checkLoginInput(); // Reset start button state
-      
+      inputName.disabled = true; inputName.value = '';
+      checkLoginInput(); 
       resultScreen.classList.add('hidden');
       questionScreen.classList.add('hidden');
       loginScreen.classList.remove('hidden');
-      
-      // Reset buttons state
       submitBtn.innerHTML = `Lihat Hasil Asesmen <i data-lucide="chevron-right" class="w-5 h-5 ml-2"></i>`;
-      
-      init(); // Re-render questions cleanly
+      init(); 
       updateProgress();
       window.scrollTo(0, 0);
     }
 
-    // Start App
+
+    // ==========================================
+    // LOGIKA DASHBOARD GURU
+    // ==========================================
+
+    function showTeacherLogin() {
+      document.getElementById('teacher-login-modal').classList.remove('hidden');
+      document.getElementById('teacher-error').classList.add('hidden');
+      document.getElementById('teacher-pin').value = '';
+    }
+
+    function hideTeacherLogin() {
+      document.getElementById('teacher-login-modal').classList.add('hidden');
+    }
+
+    function processTeacherLogin() {
+      const pin = document.getElementById('teacher-pin').value;
+      if (pin === TEACHER_PIN) {
+        hideTeacherLogin();
+        openDashboard();
+      } else {
+        document.getElementById('teacher-error').classList.remove('hidden');
+      }
+    }
+
+    function openDashboard() {
+      document.getElementById('app').classList.add('hidden');
+      document.getElementById('dashboard-screen').classList.remove('hidden');
+      document.body.style.overflow = 'hidden'; 
+      fetchDashboardData();
+    }
+
+    function exitDashboard() {
+      document.getElementById('dashboard-screen').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      document.body.style.overflow = 'auto'; 
+    }
+
+    // Helper Cari Kunci Dinamis dari Spreadsheet
+    function getVal(obj, keyword) {
+      const key = Object.keys(obj).find(k => k.toLowerCase().includes(keyword.toLowerCase()));
+      return key ? obj[key] : '-';
+    }
+
+    async function fetchDashboardData() {
+      const loadingEl = document.getElementById('dash-loading');
+      const contentEl = document.getElementById('dash-content');
+      
+      loadingEl.innerHTML = `
+        <i data-lucide="loader-2" class="w-12 h-12 animate-spin text-indigo-500 mx-auto mb-4"></i>
+        <p class="text-slate-600 font-medium">Mengambil data dari Spreadsheet...</p>
+      `;
+      lucide.createIcons();
+
+      loadingEl.classList.remove('hidden');
+      contentEl.classList.add('hidden');
+
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'GET',
+          redirect: 'follow', 
+          headers: { "Accept": "application/json" }
+        });
+        
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+        const data = await response.json();
+        spreadsheetDataCache = data;
+        
+        // Buat Filter
+        const uniqueClasses = [...new Set(data.map(item => getVal(item, "kelas")))].filter(Boolean).sort();
+        const filterSelect = document.getElementById('dash-class-filter');
+        filterSelect.innerHTML = '<option value="ALL">Semua Kelas</option>';
+        uniqueClasses.forEach(c => {
+          filterSelect.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+
+        renderDashboard();
+        
+        loadingEl.classList.add('hidden');
+        contentEl.classList.remove('hidden');
+
+      } catch (error) {
+        console.error("Gagal mengambil data dari Spreadsheet:", error);
+        loadingEl.innerHTML = `
+          <div class="text-red-500 mb-4 flex justify-center"><i data-lucide="alert-triangle" class="w-12 h-12"></i></div>
+          <p class="text-slate-800 font-bold mb-2">Koneksi ke Spreadsheet Gagal!</p>
+          <button onclick="fetchDashboardData()" class="mt-6 px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors shadow-sm">
+            Coba Ambil Data Lagi
+          </button>
+        `;
+        lucide.createIcons();
+      }
+    }
+
+    function renderDashboard() {
+      const filterClass = document.getElementById('dash-class-filter').value;
+      
+      currentFilteredData = spreadsheetDataCache;
+      if (filterClass !== "ALL") {
+        currentFilteredData = spreadsheetDataCache.filter(item => getVal(item, "kelas") === filterClass);
+      }
+
+      document.getElementById('dash-total-students').innerText = currentFilteredData.length;
+
+      if (currentFilteredData.length === 0) {
+        document.getElementById('dash-class-summary-text').innerHTML = "Belum ada data cukup untuk dianalisis.";
+        document.getElementById('dash-vak-bars').innerHTML = '<p class="text-sm text-slate-400">Belum ada data.</p>';
+        document.getElementById('dash-temp-bars').innerHTML = '<p class="text-sm text-slate-400">Belum ada data.</p>';
+        document.getElementById('dash-ab-bars').innerHTML = '<p class="text-sm text-slate-400">Belum ada data.</p>';
+        document.getElementById('dash-table-body').innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-500">Tidak ada data murid.</td></tr>';
+        return;
+      }
+
+      const countVAK = { "Visual": 0, "Auditori": 0, "Kinestetik": 0 };
+      const countTemp = { "Sanguinis": 0, "Koleris": 0, "Melankolis": 0, "Plegmatis": 0 };
+      const countAB = { "Kepribadian Tipe A": 0, "Kepribadian Tipe B": 0 };
+
+      currentFilteredData.forEach(item => {
+        let vakStr = getVal(item, "gaya");
+        if(vakStr.includes("Visual")) countVAK.Visual++;
+        if(vakStr.includes("Auditori")) countVAK.Auditori++;
+        if(vakStr.includes("Kinestetik")) countVAK.Kinestetik++;
+
+        let tempStr = getVal(item, "kepribadian dominan") || getVal(item, "tipe");
+        if(tempStr.includes("Sanguinis")) countTemp.Sanguinis++;
+        if(tempStr.includes("Koleris")) countTemp.Koleris++;
+        if(tempStr.includes("Melankolis")) countTemp.Melankolis++;
+        if(tempStr.includes("Plegmatis")) countTemp.Plegmatis++;
+
+        let abStr = getVal(item, "hasil tipe") || getVal(item, "kecenderungan");
+        if(abStr.includes("Tipe A")) countAB["Kepribadian Tipe A"]++;
+        if(abStr.includes("Tipe B")) countAB["Kepribadian Tipe B"]++;
+      });
+
+      // --- KESIMPULAN KELAS KESELURUHAN ---
+      const getTop = (obj) => Object.keys(obj).sort((a,b) => obj[b] - obj[a])[0];
+      const topVak = getTop(countVAK);
+      const topTemp = getTop(countTemp);
+      const topAB = getTop(countAB);
+      
+      const summaryText = `Berdasarkan data <b>${currentFilteredData.length} murid</b> dari filter yang dipilih, mayoritas siswa memiliki kecenderungan gaya belajar <b>${topVak}</b>. Secara interaksi sosial/kepribadian, karakter yang paling menonjol adalah <b>${topTemp}</b>. Terkait kebiasaan kerja dan tekanan tugas, sebagian besar kelas ini menunjukkan respon <b>${topAB}</b>. 
+      <br><br><i>Rekomendasi: Fokuskan metode pengajaran pada pendekatan visual/auditori/kinestetik (sesuai dominasi) dan sesuaikan ritme pemberian tugas agar selaras dengan kemampuan manajemen stres kelas.</i>`;
+      document.getElementById('dash-class-summary-text').innerHTML = summaryText;
+
+      // Progress Bars
+      renderProgressBar('dash-vak-bars', countVAK, currentFilteredData.length, 'bg-blue-500');
+      renderProgressBar('dash-temp-bars', countTemp, currentFilteredData.length, 'bg-yellow-500');
+      renderProgressBar('dash-ab-bars', countAB, currentFilteredData.length, 'bg-rose-500');
+
+      // Tabel dengan tombol Detail
+      const tbody = document.getElementById('dash-table-body');
+      tbody.innerHTML = '';
+      currentFilteredData.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition-colors";
+        tr.innerHTML = `
+          <td class="p-4">${index + 1}</td>
+          <td class="p-4 font-medium text-slate-800">${getVal(item, "nama")}</td>
+          <td class="p-4">${getVal(item, "kelas")}</td>
+          <td class="p-4"><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-semibold">${getVal(item, "gaya")}</span></td>
+          <td class="p-4"><span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-md text-xs font-semibold">${getVal(item, "kepribadian dominan") || getVal(item, "tipe")}</span></td>
+          <td class="p-4">
+            <button onclick="viewStudentDetail(${index})" class="inline-flex items-center px-3 py-1.5 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-lg text-xs font-bold transition-colors">
+              <i data-lucide="file-search" class="w-3.5 h-3.5 mr-1"></i> Detail
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function renderProgressBar(containerId, countsObj, total, colorClass) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      const sortedKeys = Object.keys(countsObj).sort((a,b) => countsObj[b] - countsObj[a]);
+      sortedKeys.forEach(key => {
+        let count = countsObj[key];
+        let pct = total > 0 ? Math.round((count / total) * 100) : 0;
+        container.innerHTML += `
+          <div>
+            <div class="flex justify-between text-sm font-medium mb-1">
+              <span class="text-slate-700">${key}</span>
+              <span class="text-slate-500">${count} siswa (${pct}%)</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2.5">
+              <div class="${colorClass} h-2.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // ==========================================
+    // LOGIKA MODAL DETAIL MURID
+    // ==========================================
+    function viewStudentDetail(index) {
+      const s = currentFilteredData[index];
+      
+      // Header Modal
+      document.getElementById('modal-name').innerText = getVal(s, "nama");
+      document.getElementById('modal-class').innerText = getVal(s, "kelas");
+      
+      // Kesimpulan
+      document.getElementById('modal-conclusion').innerText = getVal(s, "kesimpulan");
+
+      // VAK
+      document.getElementById('modal-vak-dom').innerText = getVal(s, "gaya");
+      document.getElementById('modal-vak-char').innerText = getVal(s, "karakteristik vak") || getVal(s, "karakter vak");
+      document.getElementById('modal-vak-tips').innerText = getVal(s, "tips vak");
+      document.getElementById('modal-vak-score-v').innerText = getVal(s, "skor visual");
+      document.getElementById('modal-vak-score-a').innerText = getVal(s, "skor auditori");
+      document.getElementById('modal-vak-score-k').innerText = getVal(s, "skor kinestetik");
+
+      // Kepribadian (Temperamen)
+      document.getElementById('modal-temp-dom').innerText = getVal(s, "kepribadian dominan") || getVal(s, "tipe");
+      document.getElementById('modal-temp-char').innerText = getVal(s, "karakter kepribadian") || getVal(s, "karakteristik kepribadian");
+      document.getElementById('modal-temp-tips').innerText = getVal(s, "tips kepribadian");
+      document.getElementById('modal-temp-score-s').innerText = getVal(s, "skor sanguinis");
+      document.getElementById('modal-temp-score-c').innerText = getVal(s, "skor koleris");
+      document.getElementById('modal-temp-score-m').innerText = getVal(s, "skor melankolis");
+      document.getElementById('modal-temp-score-p').innerText = getVal(s, "skor plegmatis");
+
+      // Tipe A/B
+      document.getElementById('modal-ab-dom').innerText = getVal(s, "hasil tipe") || getVal(s, "kecenderungan tipe");
+      document.getElementById('modal-ab-char').innerText = getVal(s, "karakter tipe a");
+      document.getElementById('modal-ab-tips').innerText = getVal(s, "tips tipe a");
+      document.getElementById('modal-ab-score-a').innerText = getVal(s, "skor tipe a");
+      document.getElementById('modal-ab-score-b').innerText = getVal(s, "skor tipe b");
+
+      // Tampilkan Modal
+      document.getElementById('student-detail-modal').classList.remove('hidden');
+    }
+
+    function hideStudentDetail() {
+      document.getElementById('student-detail-modal').classList.add('hidden');
+    }
+
+    // Mulai App
     init();
   </script>
 </body>
