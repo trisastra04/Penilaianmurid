@@ -126,54 +126,99 @@
   <script>
     // --- DATA KUESIONER ---
     const vakQuestions = [
-      { id: 'v1', question: "Kalau kamu sedang belajar hal yang baru, cara apa yang paling membantumu mengerti?", options: [{ id: 'A', text: "Melihat gambar, diagram, atau membaca buku petunjuk." }, { id: 'B', text: "Mendengarkan penjelasan dari guru atau teman." }, { id: 'C', text: "Langsung mencoba dan mempraktikkannya sendiri." }] },
-      { id: 'v2', question: "Saat kamu mencoba menghafal cara mengeja sebuah kata yang sulit, apa yang kamu lakukan?", options: [{ id: 'A', text: "Membayangkan bentuk tulisan kata tersebut di kepalamu." }, { id: 'B', text: "Mengeja kata tersebut keras-keras atau bergumam." }, { id: 'C', text: "Menulis kata tersebut berkali-kali di kertas." }] },
-      { id: 'v3', question: "Kalau kamu dibelikan mainan baru yang harus dirakit, apa yang pertama kali kamu lakukan?", options: [{ id: 'A', text: "Membaca buku panduan dan melihat gambarnya." }, { id: 'B', text: "Meminta orang lain menjelaskan cara merakitnya." }, { id: 'C', text: "Membuang buku panduan dan langsung mengutak-atik mainan itu." }] },
-      { id: 'v4', question: "Saat sedang ujian, bagaimana caramu mengingat pelajaran yang sudah dihafal?", options: [{ id: 'A', text: "Kamu ingat letak tulisan atau gambar di buku catatanmu." }, { id: 'B', text: "Kamu ingat suara gurumu saat menjelaskan di kelas." }, { id: 'C', text: "Kamu ingat praktik, eksperimen, atau gerakan yang dilakukan saat belajar." }] },
-      { id: 'v5', question: "Saat punya waktu luang atau libur, kegiatan apa yang paling kamu sukai?", options: [{ id: 'A', text: "Menonton film, membaca buku bergambar, atau main game visual." }, { id: 'B', text: "Mendengarkan musik, podcast, atau asyik ngobrol dengan teman." }, { id: 'C', text: "Bermain olahraga, bersepeda, atau jalan-jalan keluar rumah." }] },
-      { id: 'v6', question: "Ketika guru sedang menjelaskan pelajaran yang panjang di depan kelas, apa yang sering kamu lakukan?", options: [{ id: 'A', text: "Menatap guru atau mencatat/menggambar di buku (doodling)." }, { id: 'B', text: "Mendengarkan dengan serius (meski kadang tidak melihat ke arah guru)." }, { id: 'C', text: "Sulit duduk diam, sering mengubah posisi duduk, atau memainkan pulpen." }] },
-      { id: 'v7', question: "Bagaimana caramu yang paling gampang untuk mengingat arah atau jalan ke tempat baru?", options: [{ id: 'A', text: "Mengingat patokan bangunan, warna gedung, atau melihat peta." }, { id: 'B', text: "Bertanya kepada orang sekitar dan mengingat instruksi jalan." }, { id: 'C', text: "Mengandalkan insting saja atau membiarkan kaki melangkah mengikuti jalan." }] },
-      { id: 'v8', question: "Kalau kamu disuruh menceritakan sebuah film ke temanmu, bagaimana caramu bercerita?", options: [{ id: 'A', text: "Kamu akan menceritakan pemandangan dan pakaian tokohnya dengan sangat detail." }, { id: 'B', text: "Kamu akan meniru suara, nada bicara, atau kata-kata dari tokoh film tersebut." }, { id: 'C', text: "Kamu bercerita sambil berdiri dan menirukan gerakan/aksi tokohnya." }] },
-      { id: 'v9', question: "Di sekolah, pelajaran apa yang paling kamu sukai?", options: [{ id: 'A', text: "Seni Rupa (menggambar/melukis) atau Komputer." }, { id: 'B', text: "Seni Musik atau Bahasa (bercerita/diskusi)." }, { id: 'C', text: "Olahraga (Penjaskes) atau Keterampilan/Prakarya." }] },
-      { id: 'v10', question: "Saat bertemu teman baru, apa yang paling mudah kamu ingat darinya?", options: [{ id: 'A', text: "Kamu ingat wajahnya, tapi lupa namanya." }, { id: 'B', text: "Kamu ingat namanya, tapi lupa wajahnya." }, { id: 'C', text: "Kamu ingat apa yang kalian lakukan bersama (misalnya: bermain bola bareng)." }] },
-      { id: 'v11', question: "Apa yang paling mengganggumu saat sedang fokus belajar?", options: [{ id: 'A', text: "Meja yang berantakan atau cahaya yang terlalu redup." }, { id: 'B', text: "Suara berisik seperti orang ngobrol atau suara TV." }, { id: 'C', text: "Disuruh duduk diam dalam waktu yang terlalu lama." }] },
-      { id: 'v12', question: "Kalau kamu disuruh membaca buku cerita, buku seperti apa yang kamu pilih?", options: [{ id: 'A', text: "Buku yang punya banyak gambar atau komik." }, { id: 'B', text: "Buku yang ceritanya banyak dialog/percakapan." }, { id: 'C', text: "Buku pop-up (yang gambarnya timbul) atau buku teka-teki yang bisa diisi." }] },
-      { id: 'v13', question: "Saat kamu merasa marah atau sedih, apa yang biasanya kamu lakukan?", options: [{ id: 'A', text: "Diam saja, cemberut, atau menangis." }, { id: 'B', text: "Mengomel, berteriak, atau bercerita ke teman." }, { id: 'C', text: "Membanting pintu, berjalan cepat, atau memukul bantal." }] },
-      { id: 'v14', question: "Kalau kamu harus mengingat nomor telepon atau angka, bagaimana caramu mengingatnya?", options: [{ id: 'A', text: "Membayangkan deretan angka tersebut di pikiran." }, { id: 'B', text: "Mengucapkan angka tersebut berulang-ulang seperti nada lagu." }, { id: 'C', text: "Mengetikkan angka tersebut di udara atau berpura-pura memencet tombol HP." }] },
-      { id: 'v15', question: "Kalau kamu berhasil melakukan sesuatu yang hebat, pujian seperti apa yang paling kamu suka?", options: [{ id: 'A', text: "Diberi senyuman, stiker, atau jempol." }, { id: 'B', text: "Dipuji dengan kata-kata 'Wah, kamu hebat sekali!'." }, { id: 'C', text: "Ditepuk pundaknya, dielus rambutnya, atau melakukan 'Tos' (High five)." }] }
+      { id: 'v1', question: "Saat guru memberikan materi yang rumit (seperti Fisika, Matematika, atau Sejarah), cara apa yang paling membantumu paham?", options: [{ id: 'A', text: "Membaca rangkuman berpoin, melihat mind-map, atau menonton video animasi visual." }, { id: 'B', text: "Mendengarkan penjelasan guru secara langsung atau berdiskusi dengan teman." }, { id: 'C', text: "Mengerjakan latihan soal sendiri atau melakukan praktikum secara langsung." }] },
+      { id: 'v2', question: "Saat harus menghafal banyak istilah asing atau rumus untuk ujian, apa yang biasa kamu lakukan?", options: [{ id: 'A', text: "Membayangkan letak rumus tersebut di buku catatan atau menandainya dengan stabilo warna-warni." }, { id: 'B', text: "Membaca rumus atau istilah tersebut berulang-ulang dengan suara keras/bergumam." }, { id: 'C', text: "Menulis ulang rumus atau istilah tersebut berkali-kali di kertas coretan." }] },
+      { id: 'v3', question: "Kalau kamu membeli gadget baru atau mengunduh software yang rumit, apa yang pertama kali kamu lakukan?", options: [{ id: 'A', text: "Melihat tutorial visual di YouTube atau membaca buku panduan singkatnya." }, { id: 'B', text: "Meminta teman yang sudah paham untuk menjelaskan cara pakainya." }, { id: 'C', text: "Langsung menekan tombol-tombolnya dan mengutak-atik fiturnya sendiri." }] },
+      { id: 'v4', question: "Saat sedang mengerjakan soal UTBK atau Ujian Sekolah, bagaimana caramu mengingat materi yang sudah dipelajari?", options: [{ id: 'A', text: "Mengingat halaman buku, posisi diagram, atau tulisan tangan di catatanmu." }, { id: 'B', text: "Mengingat kembali suara atau ucapan guru/tutor saat menjelaskan materi tersebut." }, { id: 'C', text: "Mengingat gerakan tangan saat mencatat atau aktivitas praktikum di lab." }] },
+      { id: 'v5', question: "Di waktu luang atau akhir pekan, kegiatan apa yang paling asyik buatmu?", options: [{ id: 'A', text: "Menonton film/series, scrolling TikTok/IG, atau bermain game yang grafisnya bagus." }, { id: 'B', text: "Mendengarkan Spotify, mendengarkan podcast, atau nongkrong ngobrol seru dengan teman." }, { id: 'C', text: "Berolahraga, jalan-jalan (hangout) keluar rumah, atau membuat proyek DIY/karya." }] },
+      { id: 'v6', question: "Saat guru menerangkan pelajaran secara monoton dan lama di kelas, kamu biasanya...", options: [{ id: 'A', text: "Mencoret-coret buku catatan (doodling), menggambar, atau sekadar menatap papan tulis." }, { id: 'B', text: "Tetap mendengarkan walau sambil menunduk atau tidak menatap gurunya langsung." }, { id: 'C', text: "Merasa gelisah, sering ganti posisi duduk, atau memainkan pulpen/jari." }] },
+      { id: 'v7', question: "Kalau kamu mencari alamat kafe atau tempat kumpul baru bareng teman, bagaimana caramu menemukannya?", options: [{ id: 'A', text: "Mengandalkan Google Maps, mengingat nama jalan, atau patokan bangunan (warna/bentuk gedung)." }, { id: 'B', text: "Bertanya kepada warga sekitar atau menelepon teman untuk meminta petunjuk arah." }, { id: 'C', text: "Mengikuti insting arah saja sambil terus berkendara mencari lokasi." }] },
+      { id: 'v8', question: "Kalau kamu merekomendasikan sebuah series Netflix atau Anime ke teman, apa yang paling kamu highlight (tonjolkan)?", options: [{ id: 'A', text: "Pemandangan visualnya, sinematografinya, atau penampilan tokohnya yang keren." }, { id: 'B', text: "Soundtrack-nya (OST), dialog ikonik, atau pengisi suaranya yang bagus." }, { id: 'C', text: "Adegan aksi (action), ketegangan cerita, atau koreografi pertarungannya." }] },
+      { id: 'v9', question: "Di SMA, gaya belajar atau jenis tugas seperti apa yang paling kamu sukai?", options: [{ id: 'A', text: "Membuat presentasi PowerPoint yang estetik, poster, atau tugas desain." }, { id: 'B', text: "Diskusi kelompok, presentasi lisan, debat, atau tugas wawancara." }, { id: 'C', text: "Praktikum di laboratorium kimia/biologi, olahraga, atau membuat proyek karya nyata." }] },
+      { id: 'v10', question: "Saat kenalan dengan teman beda kelas atau sekolah, hal apa yang paling mudah menempel di ingatanmu?", options: [{ id: 'A', text: "Wajahnya, penampilannya, atau gaya pakaiannya (tapi kadang lupa namanya)." }, { id: 'B', text: "Namanya atau gaya bicaranya (tapi kadang lupa wajahnya)." }, { id: 'C', text: "Kegiatan yang kalian lakukan saat bertemu (misal: pernah satu tim ekskul basket)." }] },
+      { id: 'v11', question: "Hal apa yang paling cepat membuyarkan konsentrasimu saat sedang fokus belajar mandiri?", options: [{ id: 'A', text: "Meja belajar yang berantakan, notifikasi HP yang terus menyala, atau cahaya kurang pas." }, { id: 'B', text: "Suara berisik dari luar, suara TV, atau orang yang ngobrol di dekatmu." }, { id: 'C', text: "Disuruh duduk tenang di kursi terlalu lama tanpa boleh bergerak atau istirahat." }] },
+      { id: 'v12', question: "Kalau disuruh membaca untuk literasi sekolah, format apa yang paling bisa kamu nikmati?", options: [{ id: 'A', text: "Webtoon, komik, manga, atau artikel pendek dengan banyak infografis/gambar." }, { id: 'B', text: "Novel remaja yang banyak dialognya, atau lebih suka format Audiobook/Podcast." }, { id: 'C', text: "Buku panduan praktis, artikel tutorial, atau bacaan yang langsung *to the point*." }] },
+      { id: 'v13', question: "Saat kamu merasa sangat stres dengan tugas numpuk atau masalah pertemanan, apa pelampiasanmu?", options: [{ id: 'A', text: "Mengurung diri di kamar, menangis diam-diam, atau menatap layar HP berjam-jam." }, { id: 'B', text: "Curhat panjang lebar ke sahabat, menelepon seseorang, atau mendengarkan musik keras." }, { id: 'C', text: "Berjalan-jalan mencari angin keluar, berolahraga, atau membanting/memukul bantal." }] },
+      { id: 'v14', question: "Bagaimana caramu menghafal PIN ATM, password HP, atau nomor penting?", options: [{ id: 'A', text: "Membayangkan pola urutan angkanya di pikiran." }, { id: 'B', text: "Menyebutkan angkanya berkali-kali seperti ritme atau nada lagu." }, { id: 'C', text: "Mengingat letak tombol atau gerakan jari tanganku saat mengetiknya di keypad." }] },
+      { id: 'v15', question: "Saat kamu berhasil meraih nilai tertinggi atau menang lomba antarkelas, apresiasi seperti apa yang paling berkesan?", options: [{ id: 'A', text: "Mendapat piagam, sertifikat, atau hadiah fisik yang bisa dipajang dan dilihat." }, { id: 'B', text: "Mendapat pujian langsung dan ucapan kebanggaan dari guru/orang tua secara lisan." }, { id: 'C', text: "Diberi pelukan hangat, tepukan bangga di pundak, atau melakukan 'tos' dengan teman." }] }
     ];
 
     const temperamentQuestions = [
-      { id: 't1', question: "Saat bekerja dalam tugas kelompok, saya biasanya...", options: [{ id: 'A', text: "Menghidupkan suasana dan sering bercanda." }, { id: 'B', text: "Mengambil alih pimpinan dan membagi-bagi tugas." }, { id: 'C', text: "Fokus mengerjakan bagian saya dengan detail dan sempurna." }, { id: 'D', text: "Mengikuti saja apa kata ketua kelompok demi kedamaian." }] },
-      { id: 't2', question: "Jika saya sedang marah atau kesal, saya cenderung...", options: [{ id: 'A', text: "Cepat meledak marah, tapi cepat juga memaafkan dan melupakannya." }, { id: 'B', text: "Menyerang balik secara blak-blakan dan berargumen keras." }, { id: 'C', text: "Menyimpan perasaan, mudah tersinggung, dan mengingatnya cukup lama." }, { id: 'D', text: "Diam, memendamnya sendiri, dan berusaha menghindari konflik/ribut." }] },
-      { id: 't3', question: "Kekurangan utama saya yang sering dikritik orang lain adalah...", options: [{ id: 'A', text: "Terlalu banyak bicara, berantakan, dan kurang fokus." }, { id: 'B', text: "Terlalu bossy (suka memerintah), keras kepala, dan tidak sabaran." }, { id: 'C', text: "Terlalu perfeksionis, mudah pesimis/overthinking." }, { id: 'D', text: "Terlalu lambat, pasif, dan susah mengambil keputusan." }] },
-      { id: 't4', question: "Sebagai seorang teman, saya dikenal sebagai orang yang...", options: [{ id: 'A', text: "Menyenangkan, populer, dan suka bercerita panjang lebar." }, { id: 'B', text: "Setia kawan, pelindung, dan bisa memberikan solusi masalah." }, { id: 'C', text: "Pendengar yang sangat baik, dalam, dan berempati tinggi." }, { id: 'D', text: "Tenang, santai, humoris, dan paling mudah diajak ke mana saja." }] },
-      { id: 't5', question: "Ketika diberi tugas/PR baru yang cukup sulit, reaksi pertama saya...", options: [{ id: 'A', text: "Antusias di awal, tapi mungkin bosan di tengah jalan jika tidak menarik." }, { id: 'B', text: "Merasa tertantang dan langsung membuat strategi untuk menaklukkannya." }, { id: 'C', text: "Menganalisis semua detail dan kesulitan, lalu membuat jadwal teratur." }, { id: 'D', text: "Merasa ragu, menunda-nunda, dan berharap ada teman yang membantu." }] }
+      { id: 't1', question: "Saat ada kerja kelompok (project base) yang rumit, peran apa yang biasanya otomatis kamu ambil?", options: [{ id: 'A', text: "Pencair suasana. Aku banyak ide dan bikin asyik, meski kadang ceroboh soal teknis." }, { id: 'B', text: "Leader (Ketua). Aku suka membagi tugas, set deadline, dan memastikan semua kerja." }, { id: 'C', text: "Si Pemikir. Aku fokus mengerjakan bagianku dengan sangat detail, rapi, dan sempurna." }, { id: 'D', text: "Pengikut setia. Aku kerjakan apa saja yang disuruh asal kelompok aman dan nggak ada ribut." }] },
+      { id: 't2', question: "Dalam dinamika pertemanan, kalau ada sahabat yang membuatmu marah besar, kamu cenderung...", options: [{ id: 'A', text: "Cepat emosi dan meledak, tapi 5 menit kemudian bisa langsung baikan dan lupa." }, { id: 'B', text: "Mengonfrontasi langsung, berargumen keras, dan menunjukkan bahwa aku yang benar." }, { id: 'C', text: "Menyimpan rasa sakit hati itu dalam-dalam, overthinking, dan menjauhinya perlahan." }, { id: 'D', text: "Diam saja, memendam perasaan, dan berusaha menjaga hubungan baik karena malas konflik." }] },
+      { id: 't3', question: "Teguran atau kelemahan yang paling sering kamu dengar dari teman sekelasmu adalah...", options: [{ id: 'A', text: "'Kamu itu berisik banget, pecicilan, ceroboh, dan susah serius!'" }, { id: 'B', text: "'Kamu terlalu bossy (suka nyuruh-nyuruh), keras kepala, dan nggak sabaran!'" }, { id: 'C', text: "'Kamu terlalu perfeksionis, kaku, baperan, dan gampang overthinking!'" }, { id: 'D', text: "'Kamu terlalu lelet, cuek, dan kalau ditanya jawabnya 'terserah' melulu!'" }] },
+      { id: 't4', question: "Di sirkel (circle) pertemananmu, kamu dikenal sebagai sosok yang...", options: [{ id: 'A', text: "Asyik, selalu up-to-date tren, pusat perhatian, dan teman cerita yang seru." }, { id: 'B', text: "Pelindung, berani pasang badan, pengambil keputusan, dan punya solusi masalah." }, { id: 'C', text: "Pendengar yang dalam, setia, berempati tinggi, dan tempat curhat rahasia yang aman." }, { id: 'D', text: "Santai, easy-going, selera humornya receh, dan paling gampang diajak kemana saja." }] },
+      { id: 't5', question: "Menghadapi ujian berat di depan mata (seperti PTS, PAS, atau SNBT), bagaimana reaksimu biasanya?", options: [{ id: 'A', text: "Semangat di awal beli buku ini-itu, tapi belajarnya sering terdistraksi dan gampang bosan." }, { id: 'B', text: "Sangat ambisius, membuat strategi jitu, dan menargetkan nilai tertinggi dengan gigih." }, { id: 'C', text: "Membuat jadwal belajar yang sangat rinci, tapi sering cemas/pesimis kalau kurang maksimal." }, { id: 'D', text: "Belajarnya santai saja, sering menunda-nunda (prokrastinasi), dan mengalir apa adanya." }] }
     ];
 
     const typeABQuestions = [
-      { id: 'ab1', question: "Saat terjebak macet parah atau antrean panjang, bagaimana perasaanmu?", options: [{ id: 'A', text: "Sangat gelisah, stres, terus melihat jam, dan ingin marah." }, { id: 'B', text: "Santai saja, menggunakan waktu untuk dengar musik, main HP, atau istirahat." }] },
-      { id: 'ab2', question: "Dalam bermain game atau olahraga bersama teman, apakah kemenangan itu penting bagimu?", options: [{ id: 'A', text: "Ya, saya sangat kompetitif dan benci kekalahan." }, { id: 'B', text: "Tidak terlalu, yang penting saya menikmati permainannya dan bersenang-senang." }] },
-      { id: 'ab3', question: "Bagaimana kebiasaanmu berbicara atau berjalan sehari-hari?", options: [{ id: 'A', text: "Berjalan cepat, bicara cepat, dan sering menyela kalimat orang lain." }, { id: 'B', text: "Berjalan lebih santai, berbicara tenang, dan mendengarkan sampai selesai." }] },
-      { id: 'ab4', question: "Saat sedang libur panjang sekolah, apa yang biasanya kamu rasakan?", options: [{ id: 'A', text: "Kadang merasa bersalah atau gelisah jika tidak melakukan kegiatan yang produktif." }, { id: 'B', text: "Sangat menikmati waktu bermalas-malasan tanpa memikirkan beban tugas." }] },
-      { id: 'ab5', question: "Apakah kamu sering melakukan dua pekerjaan sekaligus (multitasking)?", options: [{ id: 'A', text: "Ya, sangat sering agar semua pekerjaan cepat selesai secara efisien." }, { id: 'B', text: "Jarang, saya lebih suka fokus mengerjakan satu hal pada satu waktu sampai selesai." }] }
+      { id: 'ab1', question: "Kalau kamu terjebak macet parah padahal 10 menit lagi gerbang sekolah ditutup, apa yang kamu rasakan?", options: [{ id: 'A', text: "Sangat panik, stres berat, marah-marah, dan terus mengecek jam tangan/HP." }, { id: 'B', text: "Pasrah dan santai saja, toh sudah telat, mending dengar musik sambil menunggu." }] },
+      { id: 'ab2', question: "Dalam ajang Class Meeting atau lomba E-Sports antar kelas, apakah kemenangan itu harga mati?", options: [{ id: 'A', text: "Tentu saja! Aku sangat kompetitif dan paling kesal kalau melihat kelasku kalah." }, { id: 'B', text: "Nggak terlalu penting. Yang penting seru-seruan bareng teman sekelas dan berpartisipasi." }] },
+      { id: 'ab3', question: "Bagaimana gaya komunikasimu sehari-hari dengan teman di sekolah?", options: [{ id: 'A', text: "Bicara cepat, dan terkadang menyela ucapan teman karena ingin buru-buru menyampaikan poin." }, { id: 'B', text: "Bicara santai, tenang, dan sabar mendengarkan cerita teman sampai ia selesai bicara." }] },
+      { id: 'ab4', question: "Saat libur panjang semester tiba, apa yang kamu rasakan setelah beberapa hari *nganggur* di rumah?", options: [{ id: 'A', text: "Merasa gelisah, bersalah, dan merasa tidak berguna kalau tidak melakukan kegiatan yang produktif." }, { id: 'B', text: "Sangat menikmati waktu *rebahan*, *me-time*, dan bermalas-malasan tanpa memikirkan beban tugas." }] },
+      { id: 'ab5', question: "Bagaimana caramu mengerjakan banyak tugas sekolah (misal: Makalah, PPT, PR MTK) yang numpuk?", options: [{ id: 'A', text: "Aku sering *multitasking* (mengerjakan beberapa sekaligus) agar semuanya cepat selesai secara efisien." }, { id: 'B', text: "Aku lebih suka fokus mengerjakan satu mata pelajaran secara berurutan sampai tuntas." }] }
     ];
 
     const guideData = {
       // VAK
-      'VAK_A': { title: 'Visual', icon: 'eye', iconColor: 'text-blue-500', color: 'bg-blue-100 text-blue-800 border-blue-300', characteristics: "Belajar melalui penglihatan. Mengingat lebih baik dengan gambar/warna.", tips: "Gunakan media visual (Mind map, PPT, flashcard). Minta siswa menggunakan stabilo." },
-      'VAK_B': { title: 'Auditori', icon: 'ear', iconColor: 'text-purple-500', color: 'bg-purple-100 text-purple-800 border-purple-300', characteristics: "Belajar melalui pendengaran. Suka diskusi dan peka nada suara.", tips: "Gunakan metode ceramah interaktif, diskusi. Izinkan membaca bergumam." },
-      'VAK_C': { title: 'Kinestetik', icon: 'hand', iconColor: 'text-orange-500', color: 'bg-orange-100 text-orange-800 border-orange-300', characteristics: "Belajar melalui gerakan/sentuhan. Sulit duduk diam lama.", tips: "Perbanyak praktik, eksperimen. Sisipkan ice breaking gerakan." },
+      'VAK_A': { 
+        title: 'Visual', icon: 'eye', iconColor: 'text-blue-500', color: 'bg-blue-100 text-blue-800 border-blue-300', 
+        characteristics: "Belajar melalui penglihatan. Mengingat lebih baik dengan gambar/warna.", 
+        tips: "Gunakan media visual (Mind map, PPT, flashcard). Minta siswa menggunakan stabilo.",
+        advising: "Berikan masukan secara tertulis atau tunjukkan poin-poin kesalahannya secara visual agar lebih mudah dipahami."
+      },
+      'VAK_B': { 
+        title: 'Auditori', icon: 'ear', iconColor: 'text-purple-500', color: 'bg-purple-100 text-purple-800 border-purple-300', 
+        characteristics: "Belajar melalui pendengaran. Suka diskusi dan peka nada suara.", 
+        tips: "Gunakan metode ceramah interaktif, diskusi. Izinkan membaca bergumam.",
+        advising: "Ajak berdialog secara langsung, jaga intonasi suara agar tetap tenang, dan dengarkan argumennya dengan baik."
+      },
+      'VAK_C': { 
+        title: 'Kinestetik', icon: 'hand', iconColor: 'text-orange-500', color: 'bg-orange-100 text-orange-800 border-orange-300', 
+        characteristics: "Belajar melalui gerakan/sentuhan. Sulit duduk diam lama.", 
+        tips: "Perbanyak praktik, eksperimen. Sisipkan ice breaking gerakan.",
+        advising: "Sampaikan masukan sambil beraktivitas santai (misal: sambil menepuk pundaknya atau berjalan santai) dan hindari menceramahi terlalu lama."
+      },
       
       // Temperament
-      'TEMP_A': { title: 'Sanguinis', icon: 'users', iconColor: 'text-yellow-500', color: 'bg-yellow-100 text-yellow-800 border-yellow-300', characteristics: "Ekstrovert, ceria, banyak bicara, spontan, namun kurang terorganisir.", tips: "Berikan pujian, libatkan dalam presentasi, bantu mereka membuat jadwal yang disiplin." },
-      'TEMP_B': { title: 'Koleris', icon: 'target', iconColor: 'text-red-500', color: 'bg-red-100 text-red-800 border-red-300', characteristics: "Ekstrovert, tegas, berjiwa pemimpin, target-oriented, bisa bossy.", tips: "Beri tantangan/tanggung jawab (seperti ketua kelas), namun ajarkan empati pada teman." },
-      'TEMP_C': { title: 'Melankolis', icon: 'feather', iconColor: 'text-indigo-500', color: 'bg-indigo-100 text-indigo-800 border-indigo-300', characteristics: "Introvert, pemikir, detail, perfeksionis, sensitif, mudah cemas.", tips: "Beri apresiasi atas detail kerjanya, hindari kritik tajam di depan umum, dorong untuk tidak overthinking." },
-      'TEMP_D': { title: 'Plegmatis', icon: 'shield', iconColor: 'text-emerald-500', color: 'bg-emerald-100 text-emerald-800 border-emerald-300', characteristics: "Introvert, tenang, cinta damai, pendengar baik, cenderung pasif/menunda.", tips: "Beri motivasi lembut, libatkan dalam kerja kelompok yang suportif, ajarkan untuk lebih asertif/berani tampil." },
+      'TEMP_A': { 
+        title: 'Sanguinis', icon: 'users', iconColor: 'text-yellow-500', color: 'bg-yellow-100 text-yellow-800 border-yellow-300', 
+        characteristics: "Ekstrovert, ceria, banyak bicara, spontan, namun terkadang kurang terorganisir.", 
+        tips: "Berikan ruang untuk berekspresi, libatkan dalam presentasi, bantu mereka membuat jadwal yang disiplin.",
+        advising: "Gunakan pendekatan bersahabat dan hangat. Selalu sisipkan pujian sebelum mulai memberikan kritik (metode sandwich), dan jangan terlalu kaku."
+      },
+      'TEMP_B': { 
+        title: 'Koleris', icon: 'target', iconColor: 'text-red-500', color: 'bg-red-100 text-red-800 border-red-300', 
+        characteristics: "Ekstrovert, tegas, berjiwa pemimpin, fokus pada target, namun bisa terkesan keras kepala.", 
+        tips: "Beri tantangan atau tanggung jawab (seperti ketua kelas), namun terus ajarkan empati pada teman.",
+        advising: "Sampaikan masukan secara logis, berbasis fakta, dan langsung pada intinya (to the point). Hindari bahasa yang terkesan mendikte atau memerintah."
+      },
+      'TEMP_C': { 
+        title: 'Melankolis', icon: 'feather', iconColor: 'text-indigo-500', color: 'bg-indigo-100 text-indigo-800 border-indigo-300', 
+        characteristics: "Introvert, pemikir mendalam, detail, perfeksionis, namun cukup sensitif dan mudah cemas.", 
+        tips: "Beri apresiasi atas detail kerjanya, dorong untuk tidak overthinking, berikan instruksi yang sangat jelas.",
+        advising: "Sampaikan teguran secara privat (jangan di depan umum). Gunakan bahasa yang sangat berhati-hati, dan jelaskan alasan logis di balik masukan Anda."
+      },
+      'TEMP_D': { 
+        title: 'Plegmatis', icon: 'shield', iconColor: 'text-emerald-500', color: 'bg-emerald-100 text-emerald-800 border-emerald-300', 
+        characteristics: "Introvert, tenang, cinta damai, pendengar yang baik, namun cenderung pasif dan suka menunda.", 
+        tips: "Beri motivasi lembut, libatkan dalam kerja kelompok yang suportif, ajarkan untuk lebih berani tampil.",
+        advising: "Gunakan pendekatan yang sabar dan tidak mengancam. Beri ia waktu ekstra untuk merespons, dan pancing ia perlahan untuk mengutarakan perasaannya."
+      },
       
       // Type A/B
-      'AB_A': { title: 'Kepribadian Tipe A', icon: 'zap', iconColor: 'text-rose-500', color: 'bg-rose-100 text-rose-800 border-rose-300', characteristics: "Ambisious, kompetitif, terburu-buru, rentan stres.", tips: "Ajarkan manajemen stres, relaksasi, dan bahwa kegagalan/kekalahan adalah hal wajar dalam belajar." },
-      'AB_B': { title: 'Kepribadian Tipe B', icon: 'coffee', iconColor: 'text-teal-500', color: 'bg-teal-100 text-teal-800 border-teal-300', characteristics: "Santai, sabar, easy-going, kurang kompetitif.", tips: "Berikan deadline yang lebih ketat namun fleksibel agar mereka tidak terlalu bersantai/menunda pekerjaan." }
+      'AB_A': { 
+        title: 'Kepribadian Tipe A', icon: 'zap', iconColor: 'text-rose-500', color: 'bg-rose-100 text-rose-800 border-rose-300', 
+        characteristics: "Ambisious, sangat kompetitif, terburu-buru, dan rentan terhadap stres kerja.", 
+        tips: "Ajarkan manajemen stres, relaksasi, dan bahwa kegagalan/kekalahan adalah hal wajar dalam belajar.",
+        advising: "Ingatkan ia untuk tidak terlalu keras pada diri sendiri. Bantu ia menurunkan standar kesempurnaannya agar tidak mudah tertekan, dan arahkan untuk menghargai 'proses'."
+      },
+      'AB_B': { 
+        title: 'Kepribadian Tipe B', icon: 'coffee', iconColor: 'text-teal-500', color: 'bg-teal-100 text-teal-800 border-teal-300', 
+        characteristics: "Santai, sabar, easy-going, dan kurang kompetitif.", 
+        tips: "Berikan deadline yang lebih ketat namun fleksibel agar mereka tidak terlalu bersantai/menunda pekerjaan.",
+        advising: "Tegaskan pentingnya kedisiplinan dan jelaskan konsekuensi jika menunda tugas, namun tetap gunakan intonasi yang membangun dan memotivasi."
+      }
     };
 
     const allQuestions = [...vakQuestions, ...temperamentQuestions, ...typeABQuestions];
@@ -445,14 +490,15 @@
       const compileData = (domArray) => ({
         titles: domArray.map(id => guideData[id].title).join(' / '),
         chars: domArray.map(id => guideData[id].characteristics).join(' | '),
-        tips: domArray.map(id => guideData[id].tips).join(' | ')
+        tips: domArray.map(id => guideData[id].tips).join(' | '),
+        advising: domArray.map(id => guideData[id].advising).join(' | ')
       });
 
       const vakData = compileData(domVAK);
       const tempData = compileData(domTemp);
       const abData = compileData(domAB);
 
-      const kesimpulanAkhir = `Berdasarkan hasil asesmen, ${studentName} paling optimal belajar dengan gaya ${vakData.titles}. Dalam interaksi sosial dan tugas kelompok, kepribadian utamanya cenderung ${tempData.titles}. Terkait kebiasaan kerja dan manajemen stres, ia menunjukkan kecenderungan ${abData.titles}.`;
+      const kesimpulanAkhir = `PROFIL: ${studentName} memiliki gaya belajar dominan ${vakData.titles} (${vakData.chars}). Secara kepribadian, ia cenderung ${tempData.titles} (${tempData.chars}). Terkait respon stres, ia menunjukkan ${abData.titles} (${abData.chars}).\n\nTIPS MENGAJAR: ${vakData.tips} ${tempData.tips} ${abData.tips}\n\nTIPS MENASEHATI: ${tempData.advising} ${abData.advising} ${vakData.advising}`;
 
       // Kirim Data ke Google Spreadsheet
       if (GOOGLE_SCRIPT_URL) {
