@@ -17,28 +17,53 @@
     }
   </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-slate-50 min-h-screen flex flex-col">
 
   <!-- APLIKASI UTAMA -->
-  <div id="app" class="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+  <div id="app" class="py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full flex-grow flex flex-col justify-center">
     
-    <!-- ==================== HALAMAN KUESIONER ==================== -->
-    <div id="question-screen">
-      <!-- Header -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 text-center mb-4">
-          Asesmen Profil Pelajar
-        </h1>
+    <!-- ==================== HALAMAN LOGIN ==================== -->
+    <div id="login-screen" class="w-full max-w-md mx-auto">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center">
+        <div class="flex justify-center mb-6 text-indigo-600">
+          <i data-lucide="graduation-cap" class="w-20 h-20"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Asesmen Profil Pelajar</h1>
+        <p class="text-slate-600 text-sm sm:text-base mb-8">Silakan masukkan data diri untuk memulai.</p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-slate-100">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-            <input type="text" id="student-name" class="w-full px-4 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="Masukkan namamu..." />
-          </div>
+        <div class="space-y-5 text-left">
           <div>
             <label class="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
-            <input type="text" id="student-class" class="w-full px-4 py-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" placeholder="Contoh: 7A, 8B..." />
+            <select id="student-class" disabled class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white disabled:bg-slate-100 disabled:text-slate-400">
+              <option value="">Memuat data kelas...</option>
+            </select>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
+            <select id="student-name" disabled class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white disabled:bg-slate-100 disabled:text-slate-400">
+              <option value="">Pilih Kelas terlebih dahulu</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="start-btn" disabled class="mt-8 w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-lg font-bold transition-all bg-slate-100 text-slate-400 cursor-not-allowed">
+          Mulai Asesmen
+          <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== HALAMAN KUESIONER ==================== -->
+    <div id="question-screen" class="hidden">
+      <!-- Header Info Singkat -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-800 text-center sm:text-left">
+          Asesmen Profil Pelajar
+        </h1>
+        <div class="inline-flex items-center text-sm font-medium text-slate-600 bg-slate-100 px-4 py-2 rounded-full">
+          <i data-lucide="user" class="w-4 h-4 mr-2"></i> <span id="display-name" class="mr-2"></span>
+          <span class="text-slate-300 mr-2">|</span>
+          <span id="display-class"></span>
         </div>
       </div>
 
@@ -60,7 +85,7 @@
 
       <!-- Submit Section -->
       <div class="mt-8 mb-20 text-center bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-        <p id="submit-msg" class="text-amber-600 mb-4 text-sm font-medium">Mohon isi Nama dan Kelas.</p>
+        <p id="submit-msg" class="text-amber-600 mb-4 text-sm font-medium">Masih ada pertanyaan yang belum dijawab.</p>
         <button id="submit-btn" disabled class="inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto bg-slate-100 text-slate-400 cursor-not-allowed">
           Lihat Hasil Asesmen
           <i data-lucide="chevron-right" class="w-5 h-5 ml-2"></i>
@@ -69,7 +94,7 @@
     </div>
 
     <!-- ==================== HALAMAN HASIL ==================== -->
-    <div id="result-screen" class="hidden space-y-6 max-w-2xl mx-auto">
+    <div id="result-screen" class="hidden space-y-6 max-w-2xl mx-auto w-full">
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 text-center">
         <div class="flex justify-center mb-4 text-indigo-600">
           <i data-lucide="brain-circuit" class="w-16 h-16"></i>
@@ -158,21 +183,93 @@
     let answers = {};
     let studentName = '';
     let studentClass = '';
+    let studentsData = {}; // Menyimpan data dari CSV
 
-    // GOOGLE SCRIPT URL
+    // GOOGLE SCRIPT & CSV URL
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvl4hcEPiitdME3w0MaKtlC5aB9uaNsYAxnOGjLmYwTIgynT78CyRbnchYobJN5m7o/exec'; 
+    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR3yfqmevoPCGaR100sZE9w_EDWuFyNIMVarzKzABw-RAyUYm8I6nJTlWpvtPYk-07afaotGnM7sKwY/pub?gid=894866630&single=true&output=csv';
 
     // DOM Elements
-    const qContainer = document.getElementById('questions-container');
+    const loginScreen = document.getElementById('login-screen');
+    const questionScreen = document.getElementById('question-screen');
+    const resultScreen = document.getElementById('result-screen');
+    
     const inputName = document.getElementById('student-name');
     const inputClass = document.getElementById('student-class');
+    const startBtn = document.getElementById('start-btn');
+    
+    const displayName = document.getElementById('display-name');
+    const displayClass = document.getElementById('display-class');
+    
+    const qContainer = document.getElementById('questions-container');
     const submitBtn = document.getElementById('submit-btn');
     const submitMsg = document.getElementById('submit-msg');
     const progressBar = document.getElementById('progress-bar');
     const progressText = document.getElementById('progress-text');
 
+    // Fungsi Parser CSV sederhana
+    function parseCSV(str) {
+      const arr = [];
+      let quote = false;
+      let row = 0, col = 0;
+      for (let c = 0; c < str.length; c++) {
+        let cc = str[c], nc = str[c+1];
+        arr[row] = arr[row] || [];
+        arr[row][col] = arr[row][col] || '';
+        if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+        if (cc == '"') { quote = !quote; continue; }
+        if (cc == ',' && !quote) { ++col; continue; }
+        if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+        if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+        if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+        arr[row][col] += cc;
+      }
+      return arr;
+    }
+
+    // Fetch data siswa dari CSV
+    async function loadStudentData() {
+      try {
+        const response = await fetch(CSV_URL);
+        const csvText = await response.text();
+        const rows = parseCSV(csvText);
+
+        if(rows.length > 0) {
+          const headers = rows[0].map(h => h.trim()).filter(h => h);
+          headers.forEach(h => studentsData[h] = []);
+
+          for(let i = 1; i < rows.length; i++) {
+            headers.forEach((h, index) => {
+              if(rows[i][index] && rows[i][index].trim() !== '') {
+                studentsData[h].push(rows[i][index].trim());
+              }
+            });
+          }
+
+          // Urutkan nama abjad
+          Object.keys(studentsData).forEach(k => studentsData[k].sort());
+
+          // Populate Kelas Dropdown
+          inputClass.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+          headers.forEach(h => {
+            const opt = document.createElement('option');
+            opt.value = h;
+            opt.textContent = h;
+            inputClass.appendChild(opt);
+          });
+          inputClass.disabled = false;
+        }
+      } catch (error) {
+        console.error("Error loading CSV:", error);
+        inputClass.innerHTML = '<option value="">Gagal memuat data kelas</option>';
+      }
+    }
+
     // Initialize UI
     function init() {
+      // Muat data dari CSV
+      loadStudentData();
+
       // Render questions
       qContainer.innerHTML = '';
       allQuestions.forEach(q => {
@@ -201,13 +298,67 @@
         qContainer.appendChild(qDiv);
       });
 
-      // Add event listeners
-      inputName.addEventListener('input', (e) => { studentName = e.target.value; updateProgress(); });
-      inputClass.addEventListener('input', (e) => { studentClass = e.target.value; updateProgress(); });
+      // Login Screen Listeners
+      inputClass.addEventListener('change', function() {
+        studentClass = this.value;
+        studentName = '';
+        
+        // Reset dropdown nama
+        inputName.innerHTML = '<option value="">-- Pilih Nama --</option>';
+        
+        if (studentClass && studentsData[studentClass]) {
+          inputName.disabled = false;
+          studentsData[studentClass].forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            inputName.appendChild(opt);
+          });
+        } else {
+          inputName.disabled = true;
+          inputName.innerHTML = '<option value="">Pilih Kelas terlebih dahulu</option>';
+        }
+        checkLoginInput();
+      });
+
+      inputName.addEventListener('change', function() {
+        studentName = this.value;
+        checkLoginInput();
+      });
+      
+      startBtn.addEventListener('click', startAssessment);
+
+      // Submit listener
       submitBtn.addEventListener('click', calculateResults);
 
       // Initialize icons
       lucide.createIcons();
+    }
+
+    // Validasi input di halaman Login
+    function checkLoginInput() {
+      studentName = inputName.value;
+      studentClass = inputClass.value;
+      
+      if (studentName.trim() !== '' && studentClass.trim() !== '') {
+        startBtn.disabled = false;
+        startBtn.className = "mt-8 w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-lg font-bold transition-all bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5";
+      } else {
+        startBtn.disabled = true;
+        startBtn.className = "mt-8 w-full inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-lg font-bold transition-all bg-slate-100 text-slate-400 cursor-not-allowed";
+      }
+    }
+
+    // Mulai Asesmen
+    function startAssessment() {
+      loginScreen.classList.add('hidden');
+      questionScreen.classList.remove('hidden');
+      
+      // Update display nama dan kelas di header soal
+      displayName.innerText = studentName;
+      displayClass.innerText = studentClass;
+      
+      window.scrollTo(0, 0);
     }
 
     // Handle answer selection
@@ -242,7 +393,7 @@
       progressBar.style.width = `${(answeredCount / totalQuestions) * 100}%`;
       progressText.innerText = `${answeredCount} / ${totalQuestions}`;
 
-      const isComplete = answeredCount === totalQuestions && studentName.trim() !== '' && studentClass.trim() !== '';
+      const isComplete = answeredCount === totalQuestions;
 
       if (isComplete) {
         submitBtn.disabled = false;
@@ -252,11 +403,7 @@
         submitBtn.disabled = true;
         submitBtn.className = "inline-flex items-center justify-center px-8 py-4 rounded-xl text-lg font-bold transition-all w-full sm:w-auto bg-slate-100 text-slate-400 cursor-not-allowed";
         submitMsg.classList.remove('hidden');
-        if (studentName.trim() === '' || studentClass.trim() === '') {
-          submitMsg.innerText = "Mohon isi Nama dan Kelas terlebih dahulu.";
-        } else {
-          submitMsg.innerText = `Masih ada ${totalQuestions - answeredCount} pertanyaan yang belum dijawab.`;
-        }
+        submitMsg.innerText = `Masih ada ${totalQuestions - answeredCount} pertanyaan yang belum dijawab.`;
       }
     }
 
@@ -336,8 +483,8 @@
 
     // Render results in UI
     function showResultsUI(domVAK, domTemp, domAB) {
-      document.getElementById('question-screen').classList.add('hidden');
-      document.getElementById('result-screen').classList.remove('hidden');
+      questionScreen.classList.add('hidden');
+      resultScreen.classList.remove('hidden');
       window.scrollTo(0, 0);
 
       document.getElementById('res-name').innerText = studentName;
@@ -384,11 +531,17 @@
       answers = {};
       studentName = '';
       studentClass = '';
-      inputName.value = '';
       inputClass.value = '';
       
-      document.getElementById('result-screen').classList.add('hidden');
-      document.getElementById('question-screen').classList.remove('hidden');
+      inputName.innerHTML = '<option value="">Pilih Kelas terlebih dahulu</option>';
+      inputName.disabled = true;
+      inputName.value = '';
+      
+      checkLoginInput(); // Reset start button state
+      
+      resultScreen.classList.add('hidden');
+      questionScreen.classList.add('hidden');
+      loginScreen.classList.remove('hidden');
       
       // Reset buttons state
       submitBtn.innerHTML = `Lihat Hasil Asesmen <i data-lucide="chevron-right" class="w-5 h-5 ml-2"></i>`;
